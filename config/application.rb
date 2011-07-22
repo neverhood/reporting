@@ -8,6 +8,12 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 module ReportGen
   class Application < Rails::Application
+
+    config.autoload_paths += Dir["#{Rails.root.to_s}/app/models/*"].find_all {|f| File.stat(f).directory?}
+    config.autoload_paths += Dir["#{Rails.root.to_s}/app/controllers/*"].find_all {|f| File.stat(f).directory?}
+
+    Dir.glob("./lib/*.{rb}").each { |file| require file }
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
