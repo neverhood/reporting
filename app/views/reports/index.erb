@@ -1,0 +1,12 @@
+<h1>
+  Report Generation Service. Thanks
+</h1>
+
+<div id='reports'>
+
+  <%= form_for @report, :url => customize_reports_path do |f| %>
+    <%= f.select(:type, @report_types.map { |report_type| [report_type, report_type] } ) %>
+    <%= f.submit :proceed %>
+  <% end %>
+
+</div>

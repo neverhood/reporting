@@ -1,0 +1,115 @@
++-----------------+--------------+------+-----+---------+----------------+
+| Field           | Type         | Null | Key | Default | Extra          |
++-----------------+--------------+------+-----+---------+----------------+
+| id              | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name            | varchar(255) | YES  | MUL | NULL    |                |
+| organization_id | int(11)      | YES  | MUL | NULL    |                |
+| address_id      | int(11)      | YES  |     | NULL    |                |
+| ems_form_id     | int(11)      | YES  |     | NULL    |                |
+| user_id         | int(11)      | YES  |     | NULL    |                |
+| pay_status      | int(11)      | YES  |     | NULL    |                |
+| payer           | int(11)      | YES  |     | NULL    |                |
+| pay_period      | int(11)      | YES  |     | NULL    |                |
+| invoice_method  | int(11)      | YES  |     | NULL    |                |
+| created_at      | datetime     | YES  |     | NULL    |                |
+| updated_at      | datetime     | YES  |     | NULL    |                |
+| building_name   | varchar(255) | YES  |     | NULL    |                |
+| expiration_date | date         | YES  |     | NULL    |                |
+| store_enabled   | tinyint(1)   | YES  |     | NULL    |                |
+| external_id     | int(11)      | YES  | MUL | NULL    |                |
++-----------------+--------------+------+-----+---------+----------------+
+
+
+mysql> desc addresses;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| id         | int(11)      | NO   | PRI | NULL    | auto_increment |
+| line_one   | varchar(255) | YES  |     | NULL    |                |
+| line_two   | varchar(255) | YES  |     | NULL    |                |
+| city       | varchar(255) | YES  |     | NULL    |                |
+| state      | varchar(255) | YES  |     | NULL    |                |
+| zip_code   | varchar(255) | YES  |     | NULL    |                |
+| country    | varchar(255) | YES  |     | NULL    |                |
+| created_at | datetime     | YES  |     | NULL    |                |
+| updated_at | datetime     | YES  |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+
+USERS
++----------------------------+--------------+------+-----+---------+----------------+
+| Field                      | Type         | Null | Key | Default | Extra          |
++----------------------------+--------------+------+-----+---------+----------------+
+| id                         | int(11)      | NO   | PRI | NULL    | auto_increment |
+| first_name                 | varchar(255) | YES  |     | NULL    |                |
+| middle_initial             | varchar(255) | YES  |     | NULL    |                |
+| last_name                  | varchar(255) | YES  |     | NULL    |                |
+| title                      | varchar(255) | YES  |     | NULL    |                |
+| email                      | varchar(255) | YES  | MUL | NULL    |                |
+| office_phone               | varchar(255) | YES  |     | NULL    |                |
+| cell_phone                 | varchar(255) | YES  |     | NULL    |                |
+| fax                        | varchar(255) | YES  |     | NULL    |                |
+| organization_id            | int(11)      | YES  | MUL | NULL    |                |
+| location_id                | int(11)      | YES  | MUL | NULL    |                |
+
+
+ORGANIZATIONS
+mysql> desc organizations;
++--------------------------+--------------+------+-----+---------+----------------+
+| Field                    | Type         | Null | Key | Default | Extra          |
++--------------------------+--------------+------+-----+---------+----------------+
+| id                       | int(11)      | NO   | PRI | NULL    | auto_increment |
+| name                     | varchar(255) | YES  |     | NULL    |                |
+| url                      | varchar(255) | YES  |     | NULL    |                |
+| address_id               | int(11)      | YES  |     | NULL    |                |
+| created_by_user_id       | int(11)      | YES  |     | NULL    |                |
+| last_modified_by_user_id | int(11)      | YES  |     | NULL    |                |
+| number_employees         | int(11)      | YES  |     | NULL    |                |
+| default_contact_id       | int(11)      | YES  |     | NULL    |                |
+
+
+--
+
+select loc.name as "Location Name", loc.store_enabled as "Status", 
+adr.line_one as "Address",
+usr.office_phone as "Phone Number", usr.fax as "Fax Number", usr.email as "Contact Emails",
+dcr.notes as "NOTES",
+doctors.last_name as "Medical Directors Name",
+ems_forms.form_name as "Local EMS Name",
+ems_forms.fax as "Local EMS Phone Number"
+from locations loc LEFT OUTER JOIN addresses adr on loc.address_id = adr.id
+LEFT OUTER JOIN organizations org on loc.address_id = org.address_id
+LEFT JOIN users usr on usr.id = org.default_contact_id
+JOIN device_check_records dcr JOIN devices dev on loc.id = dev.location_id and
+dcr.device_id = dev.id
+LEFT JOIN physicians doctors on dev.physician_id = doctors.id
+LEFT JOIN location_ems on loc.id = location_ems.location_id
+LEFT JOIN ems_forms on location_ems.ems_form_id = ems_forms.id;
+
+
+
+
+
+"Location Name",
+"Status",
+"Address",
+"County",				не понятно откуда :(
+"Phone Number",
+"Fax Number",
+"Contact Email",
+"Notes",
+"Medical Director's Name",
+"AED Coordinator's Name",
+"Local EMS Name",
+"Local EMS Phone Number"
+
+
+"Brentwood Office","Active","1234 Willow Trace Brentwood , TN 37210","Williamson County","615-256-1818","615-256-6884","","In june we need to add a new AED","Dr. John C. Frist, Jr., MD ","William Evers","",""
+"Dallas Office","Active","821 William ParkwayDallas, TX 79204","Davidson County","214-256-1818","214-256-3554","","","Dr. John C. Frist, Jr., MD ","Fred Miller","",""
+"Mobile Unit - Truck #07","Active","821 Fesslers ParkwayNashville, TN 37210","Davidson County","615-256-1818","","","","Dr. John C. Frist, Jr., MD ","Bill Williamson","",""
+"Nashville Office","Active","821 Fesslers Parkway Nashville , TN 37210","Davidson County","615-256-1818","615-256-6884","","","Dr. John C. Frist, Jr., MD ","Sarah Plummer ","",""
+"Stamford Office (Headquarters)","Active","123 Main StreetStamford, AL 36926","Stamford County","205-356-5000","","","","Dr. John C. Frist, Jr., MD ","Jason Willis","",""
+
+
+
+
+--
