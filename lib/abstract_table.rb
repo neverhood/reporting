@@ -12,8 +12,11 @@ module AbstractTable
       end
 
       def fields
-        File.open('/home/vlad/check', 'w') {|f| f.puts self::View}
+        @fields ||= self::View.
+            scan(/AS\s+\'(\w+)\'/i).flatten.map(&:to_sym)
       end
+
+      fields.each {|attr| send(:attr_accessor, attr); send(:attr_accessible, attr)}
 
     end
 

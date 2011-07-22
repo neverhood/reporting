@@ -1,12 +1,12 @@
 class Aed < ActiveRecord::Base
   include AbstractTable
 
-  attr_accessor :aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location,
-                :coordinator, :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1,
-                :aed_battery_1
-  attr_accessible :aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location,
-                  :coordinator, :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1,
-                  :aed_battery_1
+#  attr_accessor :aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location,
+#                :coordinator, :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1,
+#                :aed_battery_1
+#  attr_accessible :aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location,
+#                  :coordinator, :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1,
+#                  :aed_battery_1
 
 
    View =
