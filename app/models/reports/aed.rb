@@ -1,22 +1,25 @@
 class Aed < ActiveRecord::Base
-  include AbstractTable
 
-#  attr_accessor :aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location,
-#                :coordinator, :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1,
-#                :aed_battery_1
-#  attr_accessible :aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location,
-#                  :coordinator, :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1,
-#                  :aed_battery_1
+  # since we didn't want to create views right in the database we had to invent some conventions :)
+  # The idea is to manipulate the self::View query as it was a table( Please check lib/AbstractTable )
+  # The actual conventions are:
+  #  * Aliases for each field ( underscored, to make it look native )
+  #  * Alias for the entire query and set_table_name ( should be the same as set_table_name value )
+  #  * SQL string must be assigned to VIEW constant
+  #  * Please include AbstractTable in the end
+  #  * set_primary_key is needed for the ORDER BY purposes
 
+  set_table_name(:aed_report_view)
+  set_primary_key(:aed_serial_number)
 
-   View =
-    <<EOF
+  VIEW =
+      <<EOF
 -- AED
 
 -- Fields:
 -- AED Model,AED Serial Number,Location of Equipment,Placement in/around Location,AED Coordinator,Adult Electrode Pads,Pediatric Electrode Pads,AED Battery,Adult Electrode Pads 1,AED Battery 1
 
-select CONCAT(manufacturers.name,'(', device_models.model_number, ')') as 'aed_model',
+(select CONCAT(manufacturers.name,'(', device_models.model_number, ')') as 'aed_model',
        devices.serial_number as 'aed_serial_number',
        locations.name as 'location_of_equipment',
        devices.placement as 'placement_in_or_around_location',
@@ -32,8 +35,9 @@ inner join device_models on devices.device_model_id = device_models.id
 inner join manufacturers on device_models.manufacturer_id = manufacturers.id -- Aed Model
 inner join locations on devices.location_id = locations.id -- Location of Equipment
 left outer join users on locations.user_id = users.id -- AED Coordinator, no constraints here, beware of NULL's
-
+) as aed_report_view
 EOF
 
+  include AbstractTable
 
 end

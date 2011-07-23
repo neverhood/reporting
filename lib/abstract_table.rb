@@ -1,32 +1,44 @@
 module AbstractTable
 
 
-    module ClassMethods
+  module ClassMethods
 
-      def columns
-        @columns ||= []
+    def columns
+      @columns ||= []
+    end
+
+    def column(name, sql_type = nil, default = nil, null = true)
+      columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type.to_s, null)
+    end
+
+    def view
+      self::VIEW
+    end
+
+  end
+
+  def method_missing(name, *args, &blk)  # instance's one
+    if attributes.keys.map(&:to_sym).include?(name.to_sym)
+      attributes[name.to_sym]
+    else
+      super(name, args, blk)
+    end
+  end
+
+  def self.included(base)
+    base.extend(ClassMethods)
+
+    base.class_eval do
+      scope :report, from(view)
+
+      # A little bit dirty ( delegating instance methods of class Class ) but useful as hell
+      class << self
+        delegate :first, :last, :where, :to => :report # essential ones, want to name more? :) Feel free to populate
       end
-
-      def column(name, sql_type = nil, default = nil, null = true)
-        columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type.to_s, null)
-      end
-
-      def fields
-        @fields ||= self::View.
-            scan(/AS\s+\'(\w+)\'/i).flatten.map(&:to_sym)
-      end
-
-      fields.each {|attr| send(:attr_accessor, attr); send(:attr_accessible, attr)}
 
     end
 
-    def method_missing(name, *args, &blk)
-      'attributes here'
-    end
-
-    def self.included(base)
-      base.extend(ClassMethods)
-    end
+  end
 
 
 
