@@ -16,7 +16,7 @@ module AbstractTable
              case attributes[attribute].class.name
                when 'Fixnum' then :numeric
                when ('String' || 'Symbol') then :varchar
-               when ('Date') then :datetime
+               when ('Date') then :date
                when ('Time') then :time
                when ('Datetime') then :datetime
                else
