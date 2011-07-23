@@ -23,7 +23,7 @@ class Aed < ActiveRecord::Base
        devices.serial_number as 'aed_serial_number',
        locations.name as 'location_of_equipment',
        devices.placement as 'placement_in_or_around_location',
-       CONCAT(users.first_name, users.last_name) as 'coordinator', -- No constraints here, beware of NULL's
+       CONCAT(users.first_name, users.last_name) as 'coordinator', -- No constraints here, beware of NULL
        devices.primary_electrode_pads_expiration_date as 'adult_electrode_pads',
        devices.pediatric_electrode_pads_expiration_date as 'pediatric_electrode_pads', -- mostly NULL's here, children just don't get enough love this days you know
        devices.main_battery_expiration_date as 'aed_battery',
