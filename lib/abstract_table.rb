@@ -39,7 +39,7 @@ module AbstractTable
 
   def method_missing(name, *args, &blk)  # instance's one
     if attributes.keys.map(&:to_sym).include?(name.to_sym)
-      attributes[name.to_sym]
+      attributes.to_options[name.to_sym]
     else
       super(name, args, blk)
     end
