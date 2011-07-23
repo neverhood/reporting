@@ -1,7 +1,7 @@
 class Aed < ActiveRecord::Base
 
   # since we didn't want to create views right in the database we had to invent some conventions :)
-  # The idea is to manipulate the self.view query as it was a table( Please check lib/AbstractTable )
+  # The idea is to manipulate the self::View query as it was a table( Please check lib/AbstractTable )
   # The actual conventions are:
   #  * Aliases for each field ( underscored, to make it look native )
   #  * Alias for the entire query and set_table_name ( should be the same as set_table_name value )
