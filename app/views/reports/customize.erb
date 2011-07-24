@@ -6,3 +6,21 @@
   Bitch.
 </h3>
 
+<%= form_for @report.type.to_sym, :remote => true do |f| %>
+
+    <%= f.fields_for :report_fields do |report_fields| %>
+        <div id='report-fields'>
+          <h3>Please choose the fields you want( at least one )</h3>
+
+          <% @report_engine.field_types.keys.sort.each do |field| %>
+              <label>
+                <%= field %>
+                <%= report_fields.check_box field.to_sym, :checked => true, 'data-field-name' => field %>
+              </label>
+          <% end %>
+
+        </div>
+    <% end %>
+
+<% end %>
+
