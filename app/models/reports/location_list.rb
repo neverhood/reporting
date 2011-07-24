@@ -12,7 +12,7 @@ class LocationList < ActiveRecord::Base
   set_table_name(:location_list_view)
   set_primary_key(:location_name)
   
-  def self.field_types
+  def self.set_field_types_and_defaults
     # aka Migration. field => type or field => [type, default_value]
     {
         :location_name => [:string],
