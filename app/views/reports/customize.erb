@@ -3,6 +3,23 @@
   <h1>
     <%= @report.type %> report.
   </h1>
-  Bitch.
 </h3>
+
+<%= form_for @report, :remote => true do |f| %>
+
+    <%= f.fields_for :report_fields do |report_fields| %>
+        <div id='report-fields'>
+          <h3>Please choose the fields you want( at least one )</h3>
+
+          <% @report_engine.field_types.keys.sort.each do |field| %>
+              <span class='field'> <%= field %> </span>
+              <%= report_fields.check_box field.to_sym, :checked => true, 'data-field-name' => field %>
+          <% end %>
+
+        </div>
+    <% end %>
+
+    <%= f.submit(:generate) %>
+
+<% end %>
 

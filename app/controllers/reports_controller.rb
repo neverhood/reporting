@@ -4,10 +4,15 @@ class ReportsController < ApplicationController
 
   def index
     @report = Report.new
-    @report_types = Report::TYPES.sort
+    @report_types = Report::TYPES.keys.sort
   end
 
   def customize
+    @report_engine = Report::TYPES[@report.type.to_sym]
+  end
+
+  def create
+    render :text => params
   end
 
   private

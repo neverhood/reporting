@@ -6,18 +6,12 @@ class Report < ActiveRecord::Base
   attr_accessor_with_default(:type, :none)
   attr_accessible :type
 
-  TYPES = [
-      :aed,
-      :location_list,
-      :maintenance_history,
-      :plustrac_equipment,
-      :plustrac_history,
-      :plustrac_responders,
-      :plustrac_sites,
-      :plustrac_training,
-      :resp_list,
-      :user_training
-  ]
+  TYPES = {
+      :aed => Aed,
+      :location_list => LocationList,
+      :maintenance_history => MaintenanceHistory,
+      :user_training => UserTraining
+  }
 
   def self.columns
     @columns ||= []

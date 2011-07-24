@@ -1,0 +1,5 @@
+/* REPORT FIELDS [PAGE: reports/customize] */
+#report-fields { background: black; color:white; width:800px; padding:15px;}
+#report-fields .field { font-weight:bold; }
+#report-fields input[type="checkbox"] { cursor:pointer; }
+/* REPORT FIELDS [PAGE: reports/customize]  END*/
