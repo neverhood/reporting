@@ -11,6 +11,21 @@ class LocationList < ActiveRecord::Base
 
   set_table_name(:location_list_view)
   set_primary_key(:location_name)
+  
+  def self.field_types
+    # aka Migration. field => type or field => [type, default_value]
+    {
+        :location_name => [:string],
+        :active => :boolean,
+        :address => :string,
+        :phone_number => [:string, '911'],
+        :fax_number => [:string, '123FAX4566'],
+        :contact_email => :string,
+        :medical_director_name => [:string, 'Bob Junior Diamond'],
+        :local_ems_name => [:string, 'Ems generic'],
+        :local_ems_phone_number => [:string, '44332211'],
+    }
+  end
 
   VIEW =
       <<EOF
