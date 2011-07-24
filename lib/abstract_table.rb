@@ -15,6 +15,24 @@ module AbstractTable
       self::VIEW
     end
 
+    def field_types
+      opts = self.set_field_types_and_defaults
+      @field_types ||= Hash[
+        opts.map {|array| [array.first,
+                           (array.last.is_a?(Array))? array.last.first : array.last ]
+        }
+      ]
+    end
+
+    def defaults
+      opts = self.set_field_types_and_defaults
+      @defaults ||= Hash[
+        opts.map {|array| [array.first,
+                  (array.last.is_a?(Array))? array.last.last : nil ]
+        }
+      ]
+    end
+
   end
 
   def method_missing(name, *args, &blk)  # instance's one
@@ -29,8 +47,8 @@ module AbstractTable
     base.extend(ClassMethods)
 
     base.class_eval do
-      attr_accessor :attrs  # The same as attributes but is populated with default values except nils if any
-      # set in `field_types` class method
+      attr_accessor :attrs  # The same as attributes but is populated with default values instead nils if any
+      # set in `set_field_types_and_defaults` class method
       scope :report, from(view)
 
 
