@@ -7,6 +7,7 @@ $(document).ready(function() {
         version: 0,
         reportTypes: [],
         reportFields: [],
+        reportFieldsAmount: 0,
         reportFieldTypes: {},
         loader: ("<img class='loader' src='/images/loader.gif' />"),
         utils: {},
@@ -19,9 +20,23 @@ $(document).ready(function() {
     selectors.reportFieldsContainer = $('div#report-fields');
     selectors.reportFields = $(selectors.reportFieldsContainer).find('input[type="checkbox"]');
 
+    utils.checkedReportFields = function() {
+        return selectors.reportFields.filter(':checked');
+    };
+
     // Collect report fields
     $.each( selectors.reportFields, function() {
         api.reportFields.push( $(this).attr('data-field-name') );
+    });
+
+    api.reportFieldsAmount = api.reportFields.length;
+
+    selectors.reportFields.click(function() {
+        var $this = $(this);
+
+        if ( utils.checkedReportFields().length == 0 ) {
+            $this.prop('checked', true);
+        }
     });
 
 

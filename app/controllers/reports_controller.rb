@@ -11,6 +11,10 @@ class ReportsController < ApplicationController
     @report_engine = Report::TYPES[@report.type.to_sym]
   end
 
+  def create
+    render :text => params
+  end
+
   private
 
   def valid_report_type
