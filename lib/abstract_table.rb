@@ -7,26 +7,6 @@ module AbstractTable
       @columns ||= []
     end
 
-    def field_types # We are going to need this for fields and filters selections
-      attributes = self.first.attributes.to_options
-      attributes
-      Hash[
-          attributes.keys.map do |attribute|
-            [attribute,
-             case attributes[attribute].class.name
-               when 'Fixnum' then :numeric
-               when ('String' || 'Symbol') then :varchar
-               when ('Date') then :date
-               when ('Time') then :time
-               when ('Datetime') then :datetime
-               else
-                 nil
-             end
-            ]
-          end
-      ]
-    end
-
     def column(name, sql_type = nil, default = nil, null = true) # Dear Rails, please don't complain
       columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type.to_s, null)
     end
@@ -38,8 +18,8 @@ module AbstractTable
   end
 
   def method_missing(name, *args, &blk)  # instance's one
-    if attributes.keys.map(&:to_sym).include?(name.to_sym)
-      attributes.to_options[name.to_sym]
+    if attrs.keys.include?(name.to_sym)
+      attrs[name.to_sym]
     else
       super(name, args, blk)
     end
@@ -49,12 +29,16 @@ module AbstractTable
     base.extend(ClassMethods)
 
     base.class_eval do
+      attr_accessor :attrs  # The same as attributes but is populated with default values except nils if any
+      # set in `field_types` class method
       scope :report, from(view)
+
 
       # A little bit dirty ( delegating instance methods of class Class ) but useful as hell
       class << self
         delegate :first, :last, :where, :all, :to => :report # essential ones, want to name more? :) Feel free to populate
       end
+
 
     end
 

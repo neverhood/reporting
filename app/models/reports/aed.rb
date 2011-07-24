@@ -12,6 +12,21 @@ class Aed < ActiveRecord::Base
   set_table_name(:aed_report_view)
   set_primary_key(:aed_serial_number)
 
+  def self.field_types
+    # aka Migration. field => type or field => [type, default_value]
+    {
+        :aed_model => [:string, 'Chinese Tentacle Reanimator'],
+        :aed_serial_number => :string,
+        :location_of_equipment => :string,
+        :coordinator => [:string, 'God'],
+        :adult_electrode_pads => :date,
+        :pediatric_electrode_pads => :date,
+        :aed_battery => :date,
+        :adult_electrode_pads_1 => :date,
+        :aed_battery_1 => :date
+    }
+  end
+
   VIEW =
       <<EOF
 -- AED

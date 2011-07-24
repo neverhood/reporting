@@ -12,6 +12,16 @@ class MaintenanceHistory < ActiveRecord::Base
   set_table_name(:maintenance_history_view)
   set_primary_key(:serial_number)
 
+  def self.field_types
+    {
+        :location => :string,
+        :placement => :string,
+        :serial_number => :string,
+        :inspection_date => :date,
+        :inspector_name => :string,
+        :issues => :string
+    }
+  end
   VIEW =
       <<EOF
 -- Maintenance History

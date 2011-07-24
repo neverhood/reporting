@@ -12,6 +12,16 @@ class UserTraining < ActiveRecord::Base
   set_table_name(:user_trainings_view)
   set_primary_key(:name)
 
+  def self.field_types
+    {
+        :name => :string,
+        :location => :string,
+        :training_type => :string,
+        :certification_expiration => :date,
+        :days_until_due => :integer
+    }
+  end
+
   VIEW =
       <<EOF
 -- User Trainings
