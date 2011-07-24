@@ -1,5 +1,14 @@
-/* REPORT FIELDS [PAGE: reports/customize] */
-#report-fields { background: black; color:white; width:800px; padding:15px;}
+/* [PAGE: reports/customize] */
+/* REPORT FIELDS */
+#report-fields, #report-ordering { background: black; color:white; width:800px; padding:15px;}
 #report-fields .field { font-weight:bold; }
 #report-fields input[type="checkbox"] { cursor:pointer; }
-/* REPORT FIELDS [PAGE: reports/customize]  END*/
+/* REPORT FIELDS END*/
+/* REPORT TABLE */
+table#report {text-align:center; border:1px solid black;}
+table#report td { border:1px solid black; padding:10px; }
+table#report tr { padding:10px; }
+table#report th { border: 1px solid white; background:#4682B4; color:white; }
+/* REPORT TABLE END */
+
+/* [PAGE: reports/customize]  END */

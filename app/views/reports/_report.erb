@@ -1,0 +1,22 @@
+<table id='report' class='<%= @report_engine.name.underscore %>_report'>
+
+  <tr id='report-header'>
+    <% @objects.first.attrs.keys.each do |field| %>
+        <th><%= field %></th>
+    <% end %>
+  </tr>
+
+  <% @objects.each do |object| %>
+      <tr>
+        <% object.attrs.values.each do |value| %>
+            <td><%= value %></td>
+        <% end %>
+      </tr>
+  <% end %>
+
+
+  <tr id='report-footer'>
+    <%= @objects.length %> results found
+  </tr>
+
+</table>

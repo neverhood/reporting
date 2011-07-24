@@ -6,13 +6,13 @@ class UserTraining < ActiveRecord::Base
   #  * Aliases for each field ( underscored, to make it look native )
   #  * Alias for the entire query and set_table_name ( should be the same as set_table_name value )
   #  * SQL string must be assigned to VIEW constant
-  #  * Please include AbstractTable in the end
+  #  * Please include AbstractTable in the end of class
   #  * set_primary_key is needed for the ORDER BY purposes
 
   set_table_name(:user_trainings_view)
   set_primary_key(:name)
 
-  def self.field_types
+  def self.set_field_types_and_defaults
     {
         :name => :string,
         :location => :string,
