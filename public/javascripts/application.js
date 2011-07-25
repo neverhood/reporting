@@ -44,15 +44,13 @@ $(document).ready(function() {
                         find('input[type="checkbox"]').filter(':checked').first();
             };
 
-        if ($.reporting.reportFields.indexOf(optionValue) == 0 && (option.is(':selected'))) {
-             // The first option in drop-down has been enabled
-            if (checked) {
-                option.show();  alert('test');
-            } else {  // The first option in drop-down has been disabled, find closest visible and set as selected
+        if (option.is(':selected') && !checked) {
+             // User doesn't want the current 'ORDER BY' field to be included into report.
+            // Select closest field for him and hide the current option
 
                 selectors.orderBy.val(firstCheckedCheckbox().attr('data-field-name'));
                 option.hide();
-            }
+
         } else {
            if (checked) {
                option.show();
@@ -64,7 +62,7 @@ $(document).ready(function() {
 
         if ( utils.checkedReportFields().length == 0 ) {
             $this.prop('checked', true);
-            option.attr('selected', true);
+            option.show().attr('selected', true);
         }
     });
 
