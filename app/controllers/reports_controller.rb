@@ -21,7 +21,7 @@ class ReportsController < ApplicationController
         limit(50).all
 
     respond_to do |format|
-      format.js { render :json => {:table => render_to_string('reports/_report.erb')} }
+      format.js { render :json => {:table => render_to_string('reports/_report.erb'), :params => params} }
     end
 
   end

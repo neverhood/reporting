@@ -1,3 +1,5 @@
+.hidden { display:none }
+.button { background:#4682B4; width:100px; padding:10px; cursor:pointer; border-radius:5px; }
 /* [PAGE: reports/customize] */
 /* REPORT FIELDS */
 #report-fields, #report-ordering, #report-filters { background: black; color:white; width:800px; padding:15px;}
@@ -10,5 +12,9 @@ table#report td { border:1px solid black; padding:10px; }
 table#report tr { padding:10px; }
 table#report th { border: 1px solid white; background:#4682B4; color:white; }
 /* REPORT TABLE END */
+
+/* FILTERS */
+strong.remove-filter { cursor:pointer; color:red;}
+/* FILTERS END */
 
 /* [PAGE: reports/customize]  END */

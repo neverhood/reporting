@@ -26,10 +26,27 @@
     </div>
 
     <div id='report-filters'>
-      <%= f.fields_for :filters do |filter| %>
-         Field: <%= filter.select(:field, @report_engine.fields.map {|field| [field, field]}) %>
+
+      <div class='add-new-filter button'>
+        Add new filter
+      </div>
+
+      <div id='active-filters'>
+
+      </div>
+
+    </div>
+
+    <select class='filter-field-dummy hidden'>
+      <%= report_fields_for @report_engine %>
+    </select>
+
+    <div id='available-filters' class='hidden'>  <%# Div holds the selections of available filter types for each data type available in report  %>
+      <% @report_engine.field_types.values.uniq.each do |field_type| %>
+          <%= raw(filters_for field_type) %>
       <% end %>
     </div>
+
 
 
 
@@ -40,4 +57,3 @@
 <div id='report-placeholder'>
 
 </div>
-
