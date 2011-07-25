@@ -84,6 +84,7 @@ $(document).ready(function() {
     $('form#new_report').bind('ajax:complete', function(event, xhr, status) {
         if ( status = 'success' ) {
             $('#report-placeholder').html($.parseJSON(xhr.responseText).table);
+            addPagination();
         }
     }).bind('ajax:beforeSend', function() {
         // Quick, add the serialized filters before form got serialized and sent
@@ -141,3 +142,15 @@ $(document).ready(function() {
     });
 
 });
+
+    function addPagination(){
+        $(".paging a").each(function(i, val) {
+            $(this).click(function(event){
+                event.preventDefault();
+                var input = $("<input>").attr("type", "hidden").attr("name", "page").val($(this).text());
+                $('.form_for').append($(input));
+                $('.form_for').submit();
+            });
+        });
+
+    }

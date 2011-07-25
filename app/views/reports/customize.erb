@@ -5,7 +5,7 @@
   </h1>
 </h3>
 
-<%= form_for @report, :remote => true do |f| %>
+<%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
     <%= f.hidden_field :type, :value => @report.type %>
     <%= f.fields_for :fields do |fields| %>
 
@@ -55,5 +55,7 @@
 <% end %>
 
 <div id='report-placeholder'>
+    <div class="nextPage" onclick="nextPage()">doThis</div>
 
 </div>
+
