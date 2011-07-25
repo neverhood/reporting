@@ -15,7 +15,7 @@ $(document).ready(function() {
     };
 
     var selectors = api.selectors,
-        utils = api.utils;
+            utils = api.utils;
 
     selectors.reportFieldsContainer = $('div#report-fields');
     selectors.reportFields = $(selectors.reportFieldsContainer).find('input[type="checkbox"]');
@@ -33,31 +33,24 @@ $(document).ready(function() {
     api.reportFieldsAmount = api.reportFields.length;
 
 
-    // Fields Selection
-    selectors.reportFields.click(function(event) {
+    // ORDER BY Fields Selection
+    selectors.reportFields.click(function() {
         var $this = $(this),
-            checked = $this.prop('checked'),
-            option = selectors.orderBy.find('option[value="' + $this.attr('data-field-name') + '"]'),
-            optionValue = option.attr('value'),
-            firstCheckedCheckbox = function() {
-               return $.reporting.selectors.reportFieldsContainer.
-                        find('input[type="checkbox"]').filter(':checked').first();
-            };
+                checked = $this.prop('checked'),
+                option = selectors.orderBy.find('option[value="' + $this.attr('data-field-name') + '"]'),
+                firstCheckedCheckbox = function() {
+                    return $.reporting.selectors.reportFieldsContainer.
+                            find('input[type="checkbox"]').filter(':checked').first();
+                };
 
         if (option.is(':selected') && !checked) {
-             // User doesn't want the current 'ORDER BY' field to be included into report.
+            // User doesn't want the current 'ORDER BY' field to be included into report.
             // Select closest field for him and hide the current option
-
-                selectors.orderBy.val(firstCheckedCheckbox().attr('data-field-name'));
-                option.hide();
+            selectors.orderBy.val(firstCheckedCheckbox().attr('data-field-name'));
+            option.hide();
 
         } else {
-           if (checked) {
-               option.show();
-           } else {
-               option.hide();
-               selectors.orderBy.val(firstCheckedCheckbox().attr('data-field-name'));
-           }
+            checked? option.show() : option.hide();
         }
 
         if ( utils.checkedReportFields().length == 0 ) {
