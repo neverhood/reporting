@@ -1,6 +1,6 @@
 /* [PAGE: reports/customize] */
 /* REPORT FIELDS */
-#report-fields, #report-ordering { background: black; color:white; width:800px; padding:15px;}
+#report-fields, #report-ordering, #report-filters { background: black; color:white; width:800px; padding:15px;}
 #report-fields .field { font-weight:bold; }
 #report-fields input[type="checkbox"] { cursor:pointer; }
 /* REPORT FIELDS END*/
