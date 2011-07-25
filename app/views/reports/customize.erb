@@ -18,12 +18,20 @@
           <% end %>
 
         </div>
-
-        <div id='report-ordering'>
-          Order: <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
-          ASC/DESC? <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
-        </div>
     <% end %>
+
+    <div id='report-ordering'>
+      Order: <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
+      ASC/DESC? <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
+    </div>
+
+    <div id='report-filters'>
+      <%= f.fields_for :filters do |filter| %>
+         Field: <%= filter.select(:field, @report_engine.fields.map {|field| [field, field]}) %>
+      <% end %>
+    </div>
+
+
 
     <%= f.submit(:generate) %>
 
