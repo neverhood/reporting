@@ -1,13 +1,5 @@
-<%
-   @per_page = session[:per_page] ? session[:per_page] : 24
-   @lastpage = @amount/@per_page + 1
-
- %>
-
 <div class="paging">
-<% (1..@lastpage).each do |page| %>
-    <a href="#"><span class="page"><%= page %></span></a>
-<% end %>
+    <%= render :partial => 'paging' %>
 </div>
 
 <table id='report' class='<%= @report_engine.name.underscore %>_report'>

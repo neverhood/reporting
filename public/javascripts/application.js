@@ -147,7 +147,7 @@ $(document).ready(function() {
         $(".paging a").each(function(i, val) {
             $(this).click(function(event){
                 event.preventDefault();
-                var input = $("<input>").attr("type", "hidden").attr("name", "page").val($(this).text());
+                var input = $("<input>").attr("type", "hidden").attr("name", "page").val($(this).attr("id"));
                 $('.form_for').append($(input));
                 $('.form_for').submit();
             });

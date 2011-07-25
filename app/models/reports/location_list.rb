@@ -15,6 +15,7 @@ class LocationList < ActiveRecord::Base
   def self.set_field_types_and_defaults
     # aka Migration. field => type or field => [type, default_value]
     {
+        :location_id => [:integer],
         :location_name => [:string],
         :active => :boolean,
         :address => :string,
@@ -35,7 +36,8 @@ class LocationList < ActiveRecord::Base
 -- Location Name,Status,Address,Phone Number,Fax Number,Contact Email,Notes,Medical Directors Name,AED Coordinators Name,Local EMS Name,Local EMS Phone Number
 
 
-(select l1.name as 'location_name',
+(select l1.id as 'location_id',
+l1.name as 'location_name',
 if(l1.store_enabled=1, true, false) as 'active',
 CONCAT(a1.line_one, ' ', a1.city, ' ' ,a1.state, a1.zip_code) as 'address',
 u1.office_phone as 'phone_number',

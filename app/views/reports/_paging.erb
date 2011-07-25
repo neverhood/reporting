@@ -1,0 +1,26 @@
+  <% if @last_page == 1 || @last_page == 0 %>
+    <em>1 page</em>
+  <% elsif @last_page < 10 && @last_page > 1 %>
+        <% (0..@last_page).each do |i| %>
+              <% if i == @page %>
+                <em><%= i %></em>
+              <% else %>
+                <%= link_to i, '', :id => i %>
+              <% end %>
+        <% end %>
+  <% else %>
+        <%
+            start_range = @page <= 5? 1 : (@page >= @last_page ? (@page - 11) : (@page -5) )
+            end_range = @page <= 5? 10 : ( @page >= (@last_page-4) ? @last_page : (@page + 5) )
+           %>
+        <%= link_to 'first', '#', :id => "1" if @page > 5 %>
+        <% (start_range..end_range).each do |i| %>
+            <% if i == @page %>
+                <em><%= i %></em>
+            <% else %>
+                <%= link_to i, '', :id => i %>
+            <% end %>
+
+        <% end %>
+        <%= link_to 'last','', :id => @last_page unless  @page > (@last_page - 4)  %>
+  <% end %>
