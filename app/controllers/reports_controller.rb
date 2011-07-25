@@ -15,10 +15,14 @@ class ReportsController < ApplicationController
   end
 
   def create
+    @page = params[:page] ? params[:page] : 1
     @report_engine = Report::TYPES[params[:report][:type].to_sym]
     @objects = @report_engine.select(@fields_to_select).
         from(@report_engine.view).order(@order).
-        limit(50).all
+        limit(24).offset(@page.to_i).all
+
+    @amount = @report_engine.select(@fields_to_select).
+        from(@report_engine.view).order(@order).all.size  # //maybe count method needed or smth like that
 
     respond_to do |format|
       format.js { render :json => {:table => render_to_string('reports/_report.erb')} }
