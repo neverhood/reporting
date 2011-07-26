@@ -14,6 +14,19 @@ class Report < ActiveRecord::Base
       :user_training => UserTraining
   }
 
+  DATA_MAPPING = {
+       :is_null => ' IS NULL ',
+        :is_not_null => ' IS NOT NULL ',
+        :starts_with => lambda {|val| " LIKE '#{val.downcase}%' "},
+        :ends_with => lambda {|val| " LIKE '%#{val.downcase}' "},
+        :equals => lambda {|type, val| ( type==:integer )? (" = #{val} ") : (" = '#{val.downcase}' ") },
+        :contains => lambda { |val| " LIKE '%#{val.downcase}%' " },
+        :less_than => lambda { |type, val| ( type == :integer )? " < #{val} " : " < '#{val}' " },
+        :more_than => lambda { |type, val| ( type == :integer )? " > #{val} " : " > '#{val}' " },
+        :less_or_equal => lambda { |type, val| ( type == :integer )? " <= #{val} " : " <= '#{val}' " },
+        :more_or_equal => lambda { |type, val| ( type == :integer )? " >= #{val} " : " >= '#{val}' "}
+    }
+
   def self.columns
     @columns ||= []
   end

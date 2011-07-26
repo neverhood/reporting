@@ -27,7 +27,7 @@ module ReportsHelper
   end
 
   def filters_for_integer
-    filters_for_all + [:equals, :less_than, :more_than]
+    filters_for_all + [:equals, :less_than, :more_than, :less_or_equal, :more_or_equal]
   end
 
   def filters_for_boolean
@@ -35,7 +35,7 @@ module ReportsHelper
   end
 
   def filters_for_date
-    filters_for_all + [:equals, :less_than, :more_than]
+    filters_for_all + [:equals, :less_than, :more_than, :less_or_equal, :more_or_equal]
   end
 
 end

@@ -11,7 +11,17 @@ $(document).ready(function() {
         loader: ("<img class='loader' src='/images/loader.gif' />"),
         utils: {},
         selectors: {},
-        filtersRequiringInput: ['equals', 'starts_with', 'ends_with', 'contains', 'less_than', 'more_than']
+        filtersRequiringInput: ['equals', 'starts_with', 'ends_with', 'contains', 'less_than', 'more_than'],
+        notCombineAbleFilters: {
+            is_null: ['equals', 'starts_with', 'ends_with', 'contains', 'less_than', 'more_than', 'is_not_null'],
+            is_not_null: ['equals', 'starts_with', 'ends_with', 'contains', 'less_than', 'more_than', 'is_null'],
+            starts_with: ['equals', 'is_null', 'is_not_null'],
+            ends_with: ['equals', 'is_null', 'is_not_null'],
+            equals: ['starts_with', 'ends_with', 'less_than', 'more_than', 'contains'],
+            contains: ['is_null', 'is_not_null', 'equals'],
+            less_than: ['is_null', 'is_not_null', 'equals'],
+            more_than: ['is_null', 'is_not_null', 'equals']
+        }
     };
 
     var selectors = api.selectors,
@@ -26,16 +36,53 @@ $(document).ready(function() {
     utils.checkedReportFields = function() {
         return selectors.reportFields.filter(':checked');
     };
-    utils.filter = function(type) {
-        var filterFieldSelection = $('.filter-for-field').clone().
-                removeClass('filter-field-dummy hidden').addClass('filter-field');
-        var filterTypeSelection = $('#available-filters').find('.' + type);
-        var filterValue = $('<input type="text" class="filter-value" />');
-        var filter = $('<div class="filter"></div>').
-                append(filterFieldSelection).
-                append(filterTypeSelection).
-                append(filterValue);
 
+    utils.serializeFilters = function() {
+        var filters = $('#active-filters div'),
+                fieldFilters = {};
+
+        $.each(filters, function() {
+            var filter = $(this),
+                    field = filter.find('.filter-field').val(),
+                    type = filter.find('.filters').val(),
+                    value = filter.find('.filter-value').val(),
+                    toAry = function(type, value) {
+                        if (value) { return [ type,value ] } else { return [type] }
+                    },
+                    isDuplicatedOrNotCombineAble = function(type) {
+                        var result = true;
+                        $.each(fieldFilters[field], function() {
+                            if ( (this[0] == type) || ($.reporting.notCombineAbleFilters[this[0]].indexOf(type) != -1) ) {
+                                result = false;
+                            }
+                        });
+                        return result;
+                    };
+            if (field in fieldFilters) {
+                if ( isDuplicatedOrNotCombineAble(type) )  {
+                    fieldFilters[field].push( toAry(type,value) );
+                }
+            } else {
+                fieldFilters[field] = [ toAry(type, value) ];
+            }
+        });
+
+
+        $('#new_report').find('input[name*="report[filters]"]').remove();
+
+        $.each(fieldFilters, function(field, filters) {
+            var input = $('<input type="hidden" name="report[filters][' + field + ']" />');
+            var value = '';
+
+            $.each(filters, function(index) {
+                value = value + this.join(':');
+                if (filters[index + 1]) value = value + ';'
+            });
+
+            input.val( value );
+            $('#new_report').append(input);
+
+        });
     };
 
     // Collect report fields
@@ -87,22 +134,22 @@ $(document).ready(function() {
             addPagination();
             $("tr:nth-child(odd)").addClass("alt");
         }
-    }).bind('ajax:beforeSend', function() {
-        // Quick, add the serialized filters before form got serialized and sent
+    }).bind('submit', function() {
+        $.reporting.utils.serializeFilters();
     });
 
     $('strong.remove-filter').live('click', function() {
         $(this).parent('.filter').remove();
     });
 
-     // TODO: REFACTOR STARTING FROM HERE PLEASE
+    // TODO: REFACTOR STARTING FROM HERE PLEASE
     // Below crap was written in haste, I won't leave it like that, I promise
 
     var removeFilter = function() {
         return $('<strong class="remove-filter">X</strong>').clone();
     };
 
-    var blah2 = function() {
+    var reportFilterTypeOnChange = function() {
         var reportFilterValue = $('<input type="text" class="filter-value" />');
         var $this = $(this),
                 $filter = $this.parent('.filter');
@@ -112,9 +159,7 @@ $(document).ready(function() {
             $filter.append( reportFilterValue.clone() );
         }
         $filter.append( removeFilter );
-    };
-
-    var blah = function() {
+    }, reportFieldFilterOnChange = function() {
         var filter = $(this).parent(),
                 filterTypesSelection = $('#available-filters').
                         find('.' + $(this).find(':selected').attr('class') + '-filters').
@@ -133,8 +178,8 @@ $(document).ready(function() {
                 find('.' + reportFieldFilterSelection.find(':selected').attr('class') + '-filters').clone();
 
 
-        reportFieldFilterSelection.bind('change', blah);
-        reportFilterTypeSelection.bind('change', blah2);
+        reportFieldFilterSelection.bind('change', reportFieldFilterOnChange);
+        reportFilterTypeSelection.bind('change', reportFilterTypeOnChange);
 
         filter.append(reportFieldFilterSelection).append(reportFilterTypeSelection).append(removeFilter);
 
@@ -144,14 +189,14 @@ $(document).ready(function() {
 
 });
 
-    function addPagination(){
-        $(".paging a").each(function(i, val) {
-            $(this).click(function(event){
-                event.preventDefault();
-                var input = $("<input>").attr("type", "hidden").attr("name", "page").val($(this).attr("id"));
-                $('.form_for').append($(input));
-                $('.form_for').submit();
-            });
+function addPagination(){
+    $(".paging a").each(function(i, val) {
+        $(this).click(function(event){
+            event.preventDefault();
+            var input = $("<input>").attr("type", "hidden").attr("name", "page").val($(this).attr("id"));
+            $('.form_for').append($(input));
+            $('.form_for').submit();
         });
+    });
 
-    }
+}

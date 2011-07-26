@@ -3,8 +3,8 @@
 </div>
 
 <table id='report' class='<%= @report_engine.name.underscore %>_report' cellspacing="0">
-<caption><%= @report_engine.name.underscore %>_report</caption>>
-
+<caption><%= @report_engine.name.underscore %>_report</caption>
+  <% if @objects %>
   <tr id='report-header'>
     <% @objects.first.attrs.keys.each do |field| %>
         <th scope="col" abbr="<%= field %>"><%= field %></th>
@@ -19,10 +19,14 @@
       </tr>
   <% end %>
 
-
   <tr id='report-footer' data-all='<%= @amount %>'>
     All: <%= @amount %>,visible: <%= @objects.length %>
   </tr>
+  <% else %>
+      No results found, please change filters and try again
+      <% end %>
+
+
 
 
 
