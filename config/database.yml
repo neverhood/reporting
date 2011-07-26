@@ -9,11 +9,11 @@ development:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  host: 192.168.1.100
+  host: localhost
   database: report
   pool: 15
   username: root
-  password: k2o32
+  password: zxc1
   port: 3306
 #  socket: /var/run/mysqld/mysqld.sock
 

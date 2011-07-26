@@ -73,7 +73,7 @@ div#report_form {
 div#report_form div#report-filters {
 	display:inline;
 	float:left;
-	position:reltive;
+	position:relative;
 	height: 100%;
 }
 

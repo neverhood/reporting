@@ -15,7 +15,7 @@ class ReportsController < ApplicationController
   end
 
   def create
-    @page = (params[:page] ||= 1).to_i
+    @page = (params[:report][:page] ||= 1).to_i
     items_per_page = 24
     offset = (@page - 1) * items_per_page
     @report_engine = Report::TYPES[params[:report][:type].to_sym]

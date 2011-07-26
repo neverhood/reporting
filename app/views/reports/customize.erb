@@ -7,6 +7,7 @@
 <div id="report_form">
 <%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
     <%= f.hidden_field :type, :value => @report.type %>
+    <%= f.hidden_field :page, :value => "1" %>
     <%= f.fields_for :fields do |fields| %>
 
         <div id='report-fields'>
@@ -20,11 +21,6 @@
         </div>
     <% end %>
 
-    <div id='report-ordering'>
-      Order: <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
-      ASC/DESC? <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
-    </div>
-
     <div id='report-filters'>
 
       <div class='add-new-filter button'>
@@ -36,6 +32,13 @@
       </div>
 
     </div>
+
+    <div id='report-ordering'>
+      Order: <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
+      ASC/DESC? <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
+    </div>
+
+
 
     <select class='filter-field-dummy hidden'>
       <%= report_fields_for @report_engine %>
