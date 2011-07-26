@@ -5,6 +5,7 @@ class Report < ActiveRecord::Base
 
   attr_accessor_with_default(:type, :none)
   attr_accessible :type
+  attr_accessor :order_by, :order_type, :filters
 
   TYPES = {
       :aed => Aed,

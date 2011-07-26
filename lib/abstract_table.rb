@@ -24,6 +24,10 @@ module AbstractTable
       ]
     end
 
+    def fields
+      field_types.keys
+    end
+
     def defaults
       opts = self.set_field_types_and_defaults
       @defaults ||= Hash[

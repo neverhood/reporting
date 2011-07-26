@@ -5,21 +5,56 @@
   </h1>
 </h3>
 
-<%= form_for @report, :remote => true do |f| %>
+<%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
+    <%= f.hidden_field :type, :value => @report.type %>
+    <%= f.fields_for :fields do |fields| %>
 
-    <%= f.fields_for :report_fields do |report_fields| %>
         <div id='report-fields'>
           <h3>Please choose the fields you want( at least one )</h3>
 
-          <% @report_engine.field_types.keys.sort.each do |field| %>
+          <% @report_engine.fields.each do |field| %>
               <span class='field'> <%= field %> </span>
-              <%= report_fields.check_box field.to_sym, :checked => true, 'data-field-name' => field %>
+              <%= fields.check_box field.to_sym, :checked => true, 'data-field-name' => field %> <br />
           <% end %>
 
         </div>
     <% end %>
 
+    <div id='report-ordering'>
+      Order: <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
+      ASC/DESC? <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
+    </div>
+
+    <div id='report-filters'>
+
+      <div class='add-new-filter button'>
+        Add new filter
+      </div>
+
+      <div id='active-filters'>
+
+      </div>
+
+    </div>
+
+    <select class='filter-field-dummy hidden'>
+      <%= report_fields_for @report_engine %>
+    </select>
+
+    <div id='available-filters' class='hidden'>  <%# Div holds the selections of available filter types for each data type available in report  %>
+      <% @report_engine.field_types.values.uniq.each do |field_type| %>
+          <%= raw(filters_for field_type) %>
+      <% end %>
+    </div>
+
+
+
+
     <%= f.submit(:generate) %>
 
 <% end %>
+
+<div id='report-placeholder'>
+
+</div>
 
