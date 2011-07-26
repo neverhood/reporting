@@ -85,6 +85,7 @@ $(document).ready(function() {
         if ( status = 'success' ) {
             $('#report-placeholder').html($.parseJSON(xhr.responseText).table);
             addPagination();
+            $("tr:nth-child(odd) td").addClass("alt");
         }
     }).bind('ajax:beforeSend', function() {
         // Quick, add the serialized filters before form got serialized and sent

@@ -1,16 +1,16 @@
 .hidden { display:none }
-.button { background:#4682B4; width:100px; padding:10px; cursor:pointer; border-radius:5px; }
+.button { background:#4682B4; width:100px; padding:10px; cursor:pointer; border-radius:5px;color:#f5f5f5;font-size:12px }
 /* [PAGE: reports/customize] */
 /* REPORT FIELDS */
-#report-fields, #report-ordering, #report-filters { background: black; color:white; width:800px; padding:15px;}
-#report-fields .field { font-weight:bold; }
-#report-fields input[type="checkbox"] { cursor:pointer; }
+/*#report-fields, #report-ordering, #report-filters { background: black; color:white; width:800px; padding:15px;}*/
+/*#report-fields .field { font-weight:bold; }*/
+/*#report-fields input[type="checkbox"] { cursor:pointer; }*/
 /* REPORT FIELDS END*/
 /* REPORT TABLE */
-table#report {text-align:center; border:1px solid black;}
-table#report td { border:1px solid black; padding:10px; }
-table#report tr { padding:10px; }
-table#report th { border: 1px solid white; background:#4682B4; color:white; }
+/*table#report {text-align:center; border:1px solid black;}*/
+/*table#report td { border:1px solid black; padding:10px; }*/
+/*table#report tr { padding:10px; }*/
+/*table#report th { border: 1px solid white; background:#4682B4; color:white; }*/
 /* REPORT TABLE END */
 
 /* FILTERS */
@@ -18,3 +18,75 @@ strong.remove-filter { cursor:pointer; color:red;}
 /* FILTERS END */
 
 /* [PAGE: reports/customize]  END */
+
+body {
+	font: normal 11px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	background: #E6EAE9;
+}
+
+a {
+	color: #c75f3e;
+}
+
+#report {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+caption {
+	padding: 0 0 5px 0;
+	width: 900px;
+	font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	text-align: right;
+}
+
+th {
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #4f6b72;
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	border-top: 1px solid #C1DAD7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 6px 6px 6px 12px;
+	background: #CAE8EA url(/images/bg_header.jpg) no-repeat;
+}
+
+th.nobg {
+	border-top: 0;
+	border-left: 0;
+	border-right: 1px solid #C1DAD7;
+	background: none;
+}
+
+td {
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	background: #fff;
+	padding: 6px 6px 6px 12px;
+	color: #4f6b72;
+}
+
+
+td.alt {
+	background: #F5FAFA;
+	color: #797268;
+}
+
+th.spec {
+	border-left: 1px solid #C1DAD7;
+	border-top: 0;
+	background: #fff url(/images/bullet1.gif) no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+th.specalt {
+	border-left: 1px solid #C1DAD7;
+	border-top: 0;
+	background: #f5fafa url(/images/bullet2.gif) no-repeat;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	color: #797268;
+}
