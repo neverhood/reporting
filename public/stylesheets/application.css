@@ -30,7 +30,7 @@ a {
 }
 
 #report {
-	width: 100%;
+	width: 700px;
 	padding: 0;
 	margin: 0;
 }
@@ -43,7 +43,7 @@ caption {
 }
 
 th {
-	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 	color: #4f6b72;
 	border-right: 1px solid #C1DAD7;
 	border-bottom: 1px solid #C1DAD7;
@@ -71,9 +71,9 @@ td {
 }
 
 
-td.alt {
-	background: #F5FAFA;
-	color: #797268;
+tr.alt {
+	background: black;
+	color: #B4AA9D;
 }
 
 th.spec {
@@ -90,3 +90,16 @@ th.specalt {
 	font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 	color: #797268;
 }
+
+span#report-fields {
+	display:inline;
+}
+
+span#report-ordering {
+	display:inline;
+}
+
+span#report-filters {
+	display:inline;
+}
+
