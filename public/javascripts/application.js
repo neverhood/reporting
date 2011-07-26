@@ -11,7 +11,7 @@ $(document).ready(function() {
         loader: ("<img class='loader' src='/images/loader.gif' />"),
         utils: {},
         selectors: {},
-        filtersRequiringInput: ['equals', 'starts_with', 'ends_with', 'contains', 'less_than', 'more_than'],
+        filtersRequiringInput: ['equals', 'starts_with', 'ends_with', 'contains', 'less_than', 'more_than', 'less_or_equal', 'more_or_equal'],
         notCombineAbleFilters: {
             is_null: ['equals', 'starts_with', 'ends_with', 'contains', 'less_than', 'more_than', 'is_not_null'],
             is_not_null: ['equals', 'starts_with', 'ends_with', 'contains', 'less_than', 'more_than', 'is_null'],
@@ -167,7 +167,7 @@ $(document).ready(function() {
         filter.find('.filters').remove();
         filter.find('.filter-value').remove();
         filter.find('.remove-filter').remove();
-        filter.append( filterTypesSelection.bind('change', blah2) ).append( removeFilter );
+        filter.append( filterTypesSelection.bind('change', reportFilterTypeOnChange) ).append( removeFilter );
     };
 
     $('div.add-new-filter').click(function() {
