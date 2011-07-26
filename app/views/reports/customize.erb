@@ -4,7 +4,7 @@
     <%= @report.type %> report.
   </h1>
 </h3>
-
+<div id="report_form">
 <%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
     <%= f.hidden_field :type, :value => @report.type %>
     <%= f.fields_for :fields do |fields| %>
@@ -53,7 +53,7 @@
     <%= f.submit(:generate) %>
 
 <% end %>
-
+</div>
 <div id='report-placeholder'>
 
 </div>
