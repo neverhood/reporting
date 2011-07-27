@@ -1,3 +1,5 @@
+require "csv"
+
 class ReportsController < ApplicationController
 
   before_filter :valid_report_type, :only => :customize
@@ -26,10 +28,27 @@ class ReportsController < ApplicationController
         from(@report_engine.view).order(@order).count # awesome :)
     @last_page = @amount/items_per_page + 1
 
+    Rails.logger.debug "#{@fields_to_select} <<<<<<<<<< #{@report_engine}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+
     respond_to do |format|
       format.js { render :json => {:table => render_to_string('reports/_report.erb'), :params => params} }
+      format.csv {
+        render :update do |page|
+          csv_string = CSV.generate do |cs|
+            @objects.each do |item|
+              cs << []#@fields_to_select
+            end
+          end
+          #render_csv "users-#{Time.now.strftime("%d%m%Y")}"
+          page.redirect_to :action => "file_sender"
+        end
+      }
     end
 
+  end
+
+  def file_sender(csv_string=nil)
+     send_data csv_string, :type => "text/csv", :filename => 'olol.csv', :disposition => 'attachment'
   end
 
   private
@@ -50,6 +69,25 @@ class ReportsController < ApplicationController
     else
       render guilty_response
     end
+  end
+
+  def render_csv(filename= nil)
+    filename ||= params[:action]
+    filename += '.csv'
+
+    if request.env['HTTP_USER_AGENT'] =~ /msie/i
+      headers['Pragma'] = 'public'
+      headers['Content-type'] = 'text/plain'
+      headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'
+      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
+      headers['Expires'] = '0'
+    else
+      headers['Content-type'] = 'text/csv'
+      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
+    end
+
+
+
   end
 
 end

@@ -10,6 +10,8 @@ ReportGen::Application.routes.draw do
     post :customize, :on => :collection
   end
 
+  match 'reports/file_sender' => 'reports#file_sender'
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
