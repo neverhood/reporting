@@ -189,6 +189,27 @@ $(document).ready(function() {
 
     });
 
+    $('a#download-csv').click(function(event) {
+        event.preventDefault();
+        var form = $('form#new_report').
+                removeAttr('data-remote'), // Calm down, we'll set it back
+                jqExpando = [];
+
+        // Here goes some dirty, uhm, meaning "dark" magic
+        $.each( form.data(), function(key,val) {
+            if (/jQuery/.test(key)) {
+                jqExpando = [key,val];
+                delete form.data()[key];
+                delete form.data()['remote'];
+            }
+        });
+
+        form.submit();
+        form.attr('data-remote', true);  // Man said - man did
+        form.data( jqExpando[0], jqExpando[1] );
+        return false;
+    })
+
 });
 
 function addPagination(){

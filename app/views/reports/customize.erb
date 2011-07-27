@@ -58,20 +58,8 @@
 <% end %>
 </div>
 
-<div class="export"><%= link_to 'EXPORT', '', :id => 'dodo' %></div>
+<div class="export"><%= link_to 'EXPORT', nil, :id => 'download-csv' %></div>
 
 <div id='report-placeholder'>
 
 </div>
-
-<script type="text/javascript">
-  $('a#dodo').click(function(event){
-      event.preventDefault();
-      $('input[name="report[csv]"]').val("true");
-      $('.form_for').submit();
-      $('input[name="report[csv]"]').val("false");
-  });
-
-
-
-</script>
