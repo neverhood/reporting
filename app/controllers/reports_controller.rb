@@ -7,6 +7,8 @@ class ReportsController < ApplicationController
 
   layout Proc.new { |controller| controller.request.xhr?? false : 'application' }
 
+  ITEMS_PER_PAGE = 24
+
   def index
     @report = Report.new
     @report_types = Report::TYPES.keys
@@ -17,16 +19,15 @@ class ReportsController < ApplicationController
   end
 
   def create
-    @page = (params[:report][:page] ||= 1).to_i
-    items_per_page = 24
-    offset = (@page - 1) * items_per_page
+    @page = (params[:page] ||= 1).to_i
+    offset = (@page - 1) * ITEMS_PER_PAGE
     @report_engine = Report::TYPES[params[:report][:type].to_sym]
     @objects = @report_engine.select(@fields_to_select).
-        from(@report_engine.view).order(@order).
-        limit(items_per_page).offset(offset).all
+        from(@report_engine.view).where(@filters).order(@order).
+        limit(ITEMS_PER_PAGE).offset(offset).all
     @amount = @report_engine.select(@fields_to_select).
-        from(@report_engine.view).order(@order).count # awesome :)
-    @last_page = @amount/items_per_page + 1
+        from(@report_engine.view).where(@filters).count # awesome :)
+    @last_page = @amount/ITEMS_PER_PAGE + 1
 
     Rails.logger.debug "#{@fields_to_select} <<<<<<<<<< #{@report_engine}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
@@ -66,12 +67,13 @@ class ReportsController < ApplicationController
       @report_engine = report
       @fields_to_select = fields.join(',')
       @order = order
+      @filters = parse_filters(@report_engine, params[:report][:filters]) if params[:report][:filters]
     else
       render guilty_response
     end
   end
 
-  def render_csv(filename= nil)
+  def render_csv(filename= nil)  #will test this approach
     filename ||= params[:action]
     filename += '.csv'
 
@@ -85,9 +87,35 @@ class ReportsController < ApplicationController
       headers['Content-type'] = 'text/csv'
       headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
     end
+  end
 
+  def parse_filters(report, filters)   # God will punish me for this one
+      string = ' '
+      filters.each do |filter|
+        string << ' AND ' unless string.gsub(/\s/, '').blank?
+        if report.field_types[filter.first.to_sym] == :string
+           string << " LOWER(#{filter.first}) "
+        else
+          string << filter.first
+        end
 
-
+        values = filter.last.split(';')
+        values.each do |value|
+          if value.split(':').size == 1
+            string += Report::DATA_MAPPING[value.to_sym]
+          else
+            op, val = value.split(':')
+            if [:equals, :less_than, :more_than, :less_or_equal, :more_or_equal].include?(op.to_sym)
+              string += ' ' + Report::DATA_MAPPING[op.to_sym].call(report.field_types[filter.first.to_sym],val)
+            else
+               string += Report::DATA_MAPPING[op.to_sym].call(val)
+            end
+           string += " AND #{filter.first} " if (values.index(value) != values.size - 1)
+          end
+        end
+      end
+  string
   end
 
 end
+
