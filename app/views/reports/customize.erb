@@ -8,6 +8,7 @@
 <%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
     <%= f.hidden_field :type, :value => @report.type %>
     <%= f.hidden_field :page, :value => "1" %>
+    <%= f.hidden_field :csv, :value => "false" %>
     <%= f.fields_for :fields do |fields| %>
 
         <div id='report-fields'>
@@ -56,7 +57,20 @@
 
 <% end %>
 </div>
+
+<div class="export"><%= link_to 'EXPORT', '', :id => 'dodo' %></div>
+
 <div id='report-placeholder'>
 
 </div>
 
+<script type="text/javascript">
+  $('a#dodo').click(function(event){
+      event.preventDefault();
+      $('input[name="report[csv]"]').val("true");
+      $('.form_for').submit();
+  });
+
+
+
+</script>
