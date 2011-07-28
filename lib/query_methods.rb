@@ -6,18 +6,18 @@ module ActiveRecord
 
     def first
       object = super
-      set_default_values(object) if object.class.field_types && object.class.columns.empty?
+      set_default_values(object) if object.class.respond_to?(:field_types) && object.class.columns.empty?
     end
 #
     def last
       object = super
-      set_default_values(object) if object.class.field_types && object.class.columns.empty?
+      set_default_values(object) if object.class.respond_to?(:field_types) && object.class.columns.empty?
     end
 #
     def all
       objects = super
 
-      if objects.any? && objects.first.class.field_types && objects.first.class.columns.empty?
+      if objects.any? && objects.first.class.respond_to?(:field_types) && objects.first.class.columns.empty?
         objects.each_with_index do |obj, index|
           objects[index] = set_default_values(obj) # Some redundancy here, please refactor
           # ( no need to check field_types for all objects of the same class )

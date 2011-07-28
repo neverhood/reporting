@@ -4,7 +4,7 @@ class ReportsController < ApplicationController
 
   before_filter :valid_report_type, :only => :customize
   before_filter :valid_params, :only => :create
-  before_filter :show_params, :only => :create
+  before_filter :pagination, :only => :create
 
   layout Proc.new { |controller| controller.request.xhr?? false : 'application' }
 
@@ -21,47 +21,22 @@ class ReportsController < ApplicationController
   end
 
   def create
-    @report_engine = Report::TYPES[params[:report][:type].to_sym]
-    @page = (params[:report][:page] ||= 1).to_i
-    offset = (@page - 1) * ITEMS_PER_PAGE
-    @amount = @report_engine.select(@fields_to_select).
-        from(@report_engine.view).where(@filters).count # awesome :)
-    @last_page = @amount/ITEMS_PER_PAGE + 1
+    @objects = @report_engine.
+        select(@fields).
+        from(@report_engine.view).
+        where(@filters).
+        order(@order)
 
-    @objects = if request.xhr?
-                 @report_engine.select(@fields_to_select).
-                     from(@report_engine.view).where(@filters).order(@order).
-                     limit(ITEMS_PER_PAGE).offset(offset).all
-               else
-                 @report_engine.select(@fields_to_select).
-                     from(@report_engine.view).where(@filters).order(@order).all
-               end
+    @objects = request.xhr?? @objects.limit(ITEMS_PER_PAGE).offset(@offset).all : @objects.all
 
     respond_to do |format|
       format.js { render :json => {:table => render_to_string('reports/_report.erb'), :params => params} }
       format.html { send_data to_csv(@objects), :type => 'text/csv',
-                              :filename => "#{params[:report][:type]}_report_#{Time.now.strftime("%d%m%Y")}",
+                              :filename => "#{params[:report][:type]}_report_#{Time.now.strftime("%d%m%Y")}.csv",
                               :disposition => 'attachment' }
     end
 
   end
-
-#  def file_sender()
-#    @report_engine = Report::TYPES[params[:report_type].to_sym]  #yes, yes.. not so much DRY but who cares at 9am  ^_^
-#    @objects = @report_engine.select(params[:fields]).
-#        from(@report_engine.view).where(params[:filters]).order(params[:order]).all
-#
-#    csv_string = CSV.generate do |cs|
-#      cs << "hello this is first line".split
-#      @objects.each do |item|
-#        cs << item.attrs.values.each
-#      end
-#    end
-#
-#    send_data csv_string, :type => "text/csv",
-#              :filename => "params[:report_engine]_report_#{Time.now.strftime("%d%m%Y")}",
-#              :disposition => 'attachment'
-#  end
 
   private
 
@@ -72,77 +47,76 @@ class ReportsController < ApplicationController
 
   def valid_params   # What, am I too pedantic?
     fields = params[:report][:fields].reject {|key,value| value.to_i != 1}.keys.map(&:to_sym)
-    order = params[:report][:order_by] + ' ' + params[:report][:order_type]
-    report = Report::TYPES[params[:report][:type].to_sym]
-    if fields.length > 0 && ((report.fields - fields).size == (report.fields.size - fields.size)) # Smart, eh?
-      @report_engine = report
-      @fields_to_select = fields.join(',')
-      @order = order
+    @order = params[:report][:order_by] + ' ' + params[:report][:order_type]
+    @report_engine = Report::TYPES[params[:report][:type].to_sym]
+    if fields.length > 0 && ((@report_engine.fields - fields).size == (@report_engine.fields.size - fields.size)) # Smart, eh?
+      @fields = fields.join(',')
       @filters = parse_filters(@report_engine, params[:report][:filters]) if params[:report][:filters]
     else
       render guilty_response
     end
   end
 
+  def pagination
+    @page = (params[:report][:page] ||= 1).to_i
+    @offset = (@page - 1) * ITEMS_PER_PAGE
+    @amount = @report_engine.
+        select(@fields).
+        from(@report_engine.view).
+        where(@filters).
+        count
+    @last_page = @amount/ITEMS_PER_PAGE + 1
+  end
+
   def to_csv(objects)
     if objects && objects.any?
-      csv = objects.first.attrs.keys.join(',')
-      objects.each do |object|
-        csv << "\n" << object.attrs.values.join(',')
-      end
-      csv
+      objects.first.attrs.keys.join(',') + "\n" +            # Header
+      objects.map {|object| object.attrs.values.join(',')}.join("\n")
+
     else
       "No data available"
     end
   end
 
-#  def render_csv(filename= nil)  #will test this approach
-#    filename ||= params[:action]
-#    filename += '.csv'
-#
-#    if request.env['HTTP_USER_AGENT'] =~ /msie/i
-#      headers['Pragma'] = 'public'
-#      headers['Content-type'] = 'text/plain'
-#      headers['Cache-Control'] = 'no-cache, must-revalidate, post-check=0, pre-check=0'
-#      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
-#      headers['Expires'] = '0'
-#    else
-#      headers['Content-type'] = 'text/csv'
-#      headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
-#    end
-#  end
-
   def parse_filters(report, filters)   # God will punish me for this one
-    string = ' '
-    filters.each do |filter|
-      string << ' AND ' unless string.gsub(/\s/, '').blank?
-      if report.field_types[filter.first.to_sym] == :string
-        string << " LOWER(#{filter.first}) "
+    case_insensitive_if_string = lambda {|column|
+      (report.field_types[column.to_sym] == :string)? "LOWER(#{column})" : column
+    }
+    stringify_if_needed = lambda do |col,op,val|
+      if [:equals, :less_than, :more_than, :less_or_equal, :more_or_equal ].include? op.to_sym
+        Report::DATA_MAPPING[op.to_sym].call(report.field_types[col.to_sym], val)
       else
-        string << filter.first
+        Report::DATA_MAPPING[op.to_sym].call(val)
       end
+    end
 
-      values = filter.last.split(';')
-      values.each do |value|
-        if value.split(':').size == 1
-          string += Report::DATA_MAPPING[value.to_sym]
+    columns, sql_string = filters.keys, []
+
+    columns.each do |column|
+      operators_and_values = filters[column].split(';')
+      if operators_and_values.size > 1
+        operators = operators_and_values.map {|pair| pair.split(':')}.map(&:first)
+        vals = operators_and_values.map {|pair| pair.split(':')}.map(&:last)
+
+        operators.each do |operator|
+          sql_string << ( case_insensitive_if_string.call(column) + " " +
+              stringify_if_needed.call(column,operator,vals[operators.index(operator)]) )
+        end
+
+      else
+        if operators_and_values.first.split(':').length > 1
+          op, val = operators_and_values.first.split(':')
+          sql_string << column + " " + Report::DATA_MAPPING[op.to_sym].call(report.field_types[column.to_sym],val)
         else
-          op, val = value.split(':')
-          if [:equals, :less_than, :more_than, :less_or_equal, :more_or_equal].include?(op.to_sym)
-            string += ' ' + Report::DATA_MAPPING[op.to_sym].call(report.field_types[filter.first.to_sym],val)
-          else
-            string += Report::DATA_MAPPING[op.to_sym].call(val)
-          end
-          string += " AND #{filter.first} " if (values.index(value) != values.size - 1)
+          sql_string << column + " " + Report::DATA_MAPPING[operators_and_values.first.to_sym] # this is 'IS NULL' or 'IS NOT NULL'
         end
       end
     end
-    string
-  end
 
-  def show_params
-    Rails.logger.debug "PARAMS #{params}      ################before_filter"
+    sql_string.join(" AND ")
+
   end
 
 end
+
 
