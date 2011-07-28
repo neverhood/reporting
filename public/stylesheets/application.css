@@ -67,16 +67,22 @@ div#report_form {
 	border: 1px dashed white;
 	float: left;
 	height: auto;
-	width: auto;
+	width: 59%;
 }
 
-div#report_form div#report-filters {
+div#report-filters {
 	display:inline;
 	float:left;
 	position:relative;
 	height: 100%;
+	width: 340px;
 }
 
-div#report_fields{
-	
+div#report-fields{
+	float:left;
+	width: 260px;
+}
+
+div#report-ordering {
+	float: left;
 }
