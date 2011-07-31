@@ -3,12 +3,20 @@
 <head>
   <title>ReportGen</title>
   <%= stylesheet_link_tag :all %>
-  <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag :defaults, "utils" %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-
-<%= yield %>
-
+<div class="wrapper">
+  <div class="header">
+    AED reprting engine.
+  </div>
+  <div class="content">
+    <%= show_flash %>
+    <%= yield %>
+  </div>
+  <div class="footer_spacer"></div>
+ </div>
+<div class="footer">&copy <a href="mailto:#">Client</a>, 2011</div>
 </body>
 </html>

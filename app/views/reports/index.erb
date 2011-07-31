@@ -1,12 +1,14 @@
-<h1>
-  Report Generation Service. Thanks
-</h1>
-
 <div id='reports'>
 
-  <%= form_for @report, :url => customize_reports_path do |f| %>
-    <%= f.select(:type, @report_types.map { |report_type| [report_type, report_type] } ) %>
-    <%= f.submit :proceed %>
+  <div class="toolbar">
+	 <%= link_to 'Choose report type', root_path, :class=>"button btn_choose" %>
+     <%= link_to 'Run report', nil, :id => "report_submit", :class => "button btn_run_disabled" %>
+	 <%= link_to 'Export', nil, :id => 'download-csv', :class=>"button btn_export_disabled" %>
+    </div>
+
+  <% @report_types.each do |report_type|  %>
+    <div class="report_ref"><%= link_to "#{report_type} report", "/reports/customize/#{report_type}"%></div>
+
   <% end %>
 
 </div>

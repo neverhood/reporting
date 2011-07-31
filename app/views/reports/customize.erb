@@ -1,18 +1,21 @@
-<h3>
-  fields to display:
-  <h1>
-    <%= @report.type %> report.
-  </h1>
-</h3>
 <div id="report_form">
 <%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
+    <div class="toolbar">
+	 <%= link_to 'Choose report type', root_path, :class=>"button btn_choose" %>
+	 <input type="submit" value="Run report" name="commit" id="report_submit" class="button btn_run" >
+	 <%= link_to 'Export', nil, :id => 'download-csv', :class=>"button btn_export" %>
+    </div>
+	<h1>
+    <%= @report.type %> report.
+    </h1>
     <%= f.hidden_field :type, :value => @report.type %>
     <%= f.hidden_field :page, :value => "1" %>
     <%= f.hidden_field :csv, :value => "false" %>
     <%= f.fields_for :fields do |fields| %>
 
         <div id='report-fields'>
-          <h3>Please choose the fields you want( at least one )</h3>
+          <h2>Fields</h2>
+		  <div class="hint">please choose at least one field</div>
 
           <% @report_engine.fields.each do |field| %>
               <span class='field'> <%= field %> </span>
@@ -21,24 +24,17 @@
 
         </div>
     <% end %>
-
+	<div class="central">
     <div id='report-filters'>
-
-      <div class='add-new-filter button'>
+	  <h2>Filter</h2>
+      <a class='add-new-filter button'>
         Add new filter
-      </div>
+      </a>
 
       <div id='active-filters'>
       </div>
-
+		<div style="clear:both;"></div>
     </div>
-
-    <div id='report-ordering'>
-      Order: <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
-      ASC/DESC? <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
-    </div>
-
-
 
     <select class='filter-field-dummy hidden'>
       <%= report_fields_for @report_engine %>
@@ -49,17 +45,16 @@
           <%= raw(filters_for field_type) %>
       <% end %>
     </div>
-
-
-
-
-    <%= f.submit(:generate) %>
-
+	<div id='report-ordering'>
+	  <h2>Order</h2>
+      <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
+      direction: <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
+    </div>
+	  
+	</div>
 <% end %>
+<div style="clear:both;"></div>
 </div>
-
-<div class="export"><%= link_to 'EXPORT', nil, :id => 'download-csv' %></div>
-
 <div id='report-placeholder'>
-
+<h2>Report</h2>
 </div>

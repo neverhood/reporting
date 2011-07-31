@@ -148,7 +148,8 @@ $(document).ready(function() {
     // Below crap was written in haste, I won't leave it like that, I promise
 
     var removeFilter = function() {
-        return $('<strong class="remove-filter">X</strong>').clone();
+	/*YG: removed 'X' CSS works better here*/
+        return $('<strong class="remove-filter"></strong>').clone();
     };
 
     var reportFilterTypeOnChange = function() {
@@ -171,8 +172,8 @@ $(document).ready(function() {
         filter.find('.remove-filter').remove();
         filter.append( filterTypesSelection.bind('change', reportFilterTypeOnChange) ).append( removeFilter );
     };
-
-    $('div.add-new-filter').click(function() {
+/*YG: replaced div with a*/
+    $('a.add-new-filter').click(function() {
         var filter = $('<div class="filter"></div>');
         var reportFieldFilterSelection =  $('.filter-field-dummy').clone().
                 removeClass('filter-field-dummy hidden').addClass('filter-field');

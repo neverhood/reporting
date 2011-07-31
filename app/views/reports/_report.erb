@@ -1,9 +1,10 @@
+<h2>Report</h2>
 <div class="paging">
     <%= render :partial => 'paging' %>
 </div>
 
 <table id='report' class='<%= @report_engine.name.underscore %>_report' cellspacing="0">
-<caption><%= @report_engine.name.underscore %>_report</caption>
+
   <% if @objects %>
   <tr id='report-header'>
     <% @objects.first.attrs.keys.each do |field| %>

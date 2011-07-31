@@ -10,6 +10,8 @@ ReportGen::Application.routes.draw do
     post :customize, :on => :collection
   end
 
+  match 'reports/customize/:report' => 'reports#customize', :as => :customize
+
   match 'reports/file_sender' => 'reports#file_sender'
 
 
