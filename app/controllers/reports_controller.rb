@@ -18,6 +18,8 @@ class ReportsController < ApplicationController
 
   def customize
     @report_engine = Report::TYPES[@report.type.to_sym]
+    @objects = @report_engine.limit(10).all
+    @page, @last_page, @amount = 1, 1, 10
   end
 
   def create

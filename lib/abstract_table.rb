@@ -58,7 +58,7 @@ module AbstractTable
 
       # A little bit dirty ( delegating instance methods of class Class ) but useful as hell
       class << self
-        delegate :first, :last, :where, :all, :to => :report # essential ones, want to name more? :) Feel free to populate
+        delegate :first, :last, :where, :all, :limit, :to => :report # essential ones, want to name more? :) Feel free to populate
       end
 
 

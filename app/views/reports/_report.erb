@@ -1,31 +1,31 @@
 <h2>Report</h2>
 <div class="paging">
-    <%= render :partial => 'paging' %>
+  <%= render :partial => 'paging' %>
 </div>
 
 <table id='report' class='<%= @report_engine.name.underscore %>_report' cellspacing="0">
 
   <% if @objects %>
-  <tr id='report-header'>
-    <% @objects.first.attrs.keys.each do |field| %>
-        <th scope="col" abbr="<%= field %>"><%= field %></th>
-    <% end %>
-  </tr>
-
-  <% @objects.each do |object| %>
-      <tr>
-        <% object.attrs.values.each do |value| %>
-            <td><%= value %></td>
+      <tr id='report-header'>
+        <% @objects.first.attrs.keys.each do |field| %>
+            <th scope="col" abbr="<%= field %>"><%= field %></th>
         <% end %>
       </tr>
-  <% end %>
 
-  <tr id='report-footer' data-all='<%= @amount %>'>
-    All: <%= @amount %>,visible: <%= @objects.length %>
-  </tr>
+      <% @objects.each do |object| %>
+          <tr>
+            <% object.attrs.values.each do |value| %>
+                <td><%= value %></td>
+            <% end %>
+          </tr>
+      <% end %>
+
+      <tr id='report-footer' data-all='<%= @amount %>'>
+        All: <%= @amount %>,visible: <%= @objects.length %>
+      </tr>
   <% else %>
       No results found, please change filters and try again
-      <% end %>
+  <% end %>
 
 
 

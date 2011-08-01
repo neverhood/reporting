@@ -1,60 +1,61 @@
 <div id="report_form">
-<%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
-    <div class="toolbar">
-	 <%= link_to 'Choose report type', root_path, :class=>"button btn_choose" %>
-	 <input type="submit" value="Run report" name="commit" id="report_submit" class="button btn_run" >
-	 <%= link_to 'Export', nil, :id => 'download-csv', :class=>"button btn_export" %>
-    </div>
-	<h1>
-    <%= @report.type %> report.
-    </h1>
-    <%= f.hidden_field :type, :value => @report.type %>
-    <%= f.hidden_field :page, :value => "1" %>
-    <%= f.hidden_field :csv, :value => "false" %>
-    <%= f.fields_for :fields do |fields| %>
-
-        <div id='report-fields'>
-          <h2>Fields</h2>
-		  <div class="hint">please choose at least one field</div>
-
-          <% @report_engine.fields.each do |field| %>
-              <span class='field'> <%= field %> </span>
-              <%= fields.check_box field.to_sym, :checked => true, 'data-field-name' => field %> <br />
-          <% end %>
-
-        </div>
-    <% end %>
-	<div class="central">
-    <div id='report-filters'>
-	  <h2>Filter</h2>
-      <a class='add-new-filter button'>
-        Add new filter
-      </a>
-
-      <div id='active-filters'>
+  <%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
+      <div class="toolbar">
+        <%= link_to 'Choose report type', root_path, :class=>"button btn_choose" %>
+        <input type="submit" value="Run report" name="commit" id="report_submit" class="button btn_run" >
+        <%= link_to 'Export', nil, :id => 'download-csv', :class=>"button btn_export" %>
       </div>
-		<div style="clear:both;"></div>
-    </div>
+      <h1>
+        <%= @report.type %> report.
+      </h1>
+      <%= f.hidden_field :type, :value => @report.type %>
+      <%= f.hidden_field :page, :value => "1" %>
+      <%= f.hidden_field :csv, :value => "false" %>
+      <%= f.fields_for :fields do |fields| %>
 
-    <select class='filter-field-dummy hidden'>
-      <%= report_fields_for @report_engine %>
-    </select>
+          <div id='report-fields'>
+            <h2>Fields</h2>
+            <div class="hint">please choose at least one field</div>
 
-    <div id='available-filters' class='hidden'>  <%# Div holds the selections of available filter types for each data type available in report  %>
-      <% @report_engine.field_types.values.uniq.each do |field_type| %>
-          <%= raw(filters_for field_type) %>
+            <% @report_engine.fields.each do |field| %>
+                <span class='field'> <%= field %> </span>
+                <%= fields.check_box field.to_sym, :checked => true, 'data-field-name' => field %> <br />
+            <% end %>
+
+          </div>
       <% end %>
-    </div>
-	<div id='report-ordering'>
-	  <h2>Order</h2>
-      <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
-      direction: <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
-    </div>
-	  
-	</div>
-<% end %>
-<div style="clear:both;"></div>
+      <div class="central">
+        <div id='report-filters'>
+          <h2>Filter</h2>
+          <a class='add-new-filter button'>
+            Add new filter
+          </a>
+
+          <div id='active-filters'>
+          </div>
+          <div style="clear:both;"></div>
+        </div>
+
+        <select class='filter-field-dummy hidden'>
+          <%= report_fields_for @report_engine %>
+        </select>
+
+        <div id='available-filters' class='hidden'>  <%# Div holds the selections of available filter types for each data type available in report  %>
+          <% @report_engine.field_types.values.uniq.each do |field_type| %>
+              <%= raw(filters_for field_type) %>
+          <% end %>
+        </div>
+        <div id='report-ordering'>
+          <h2>Order</h2>
+          <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
+          direction: <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
+        </div>
+
+      </div>
+  <% end %>
+  <div style="clear:both;"></div>
 </div>
+
 <div id='report-placeholder'>
-<h2>Report</h2>
+  <%= render :partial => 'reports/report' %>
 </div>
