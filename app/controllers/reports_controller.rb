@@ -44,7 +44,6 @@ class ReportsController < ApplicationController
 
   def valid_report_type
     @report = Report.new :type => params[:report]
-    Rails.logger.debug("#{@report.type} <<0<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     render(guilty_response) unless Report::TYPES.include? @report.type.to_sym
   end
 

@@ -316,3 +316,29 @@ background-color:#B2CFFF;
 .footer, .footer a {
     color: #777A7C;
 }
+
+/*LOADER DIV*/
+
+#ajax-load-background {
+    display:none;
+    opacity:0.55;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: none repeat scroll 0% 0%;
+    background-color:#000;
+    z-index: 4999;
+}
+#ajax-load {
+    position: fixed;
+    z-index: 5000;
+    top: 50%;
+    left: 50%;
+    margin-left: -20px;
+    text-align: center;
+}
+#ajax-load #ajax-load-title, #ajax-load #ajax-load-help { color: #fff; }
+#ajax-load #ajax-load-title { font-size: 16px; }
+#ajax-load #ajax-load-help {font-size: 10px;}

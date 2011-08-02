@@ -192,6 +192,8 @@ $(document).ready(function() {
 
     $('a#download-csv').click(function(event) {
         event.preventDefault();
+
+        $('#ajax-load-background').show();
         var form = $('form#new_report').
                 removeAttr('data-remote'), // Calm down, we'll set it back
                 jqExpando = [];
@@ -208,6 +210,10 @@ $(document).ready(function() {
         form.submit();
         form.attr('data-remote', true);  // Man said - man did
         form.data( jqExpando[0], jqExpando[1] );
+        setTimeout(function(){
+            $('#ajax-load-background').hide()
+        }, 2300);
+
         return false;
     })
 
