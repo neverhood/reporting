@@ -47,7 +47,7 @@ class ReportsController < ApplicationController
     render(guilty_response) unless Report::TYPES.include? @report.type.to_sym
   end
 
-  def valid_params   # What, am I too pedantic?
+  def valid_params
     @fields = params[:report][:fields]
     @order = params[:report][:order_by] + ' ' + params[:report][:order_type]
     @report_engine = Report::TYPES[params[:report][:type].to_sym]

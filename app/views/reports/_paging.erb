@@ -1,7 +1,7 @@
 <% if @last_page == 1 || @last_page == 0 %>
     <em>1 page</em>
 <% elsif @last_page < 10 && @last_page > 1 %>
-    <% (0..@last_page).each do |i| %>
+    <% (1..@last_page).each do |i| %>
         <% if i == @page %>
             <em><%= i %></em>
         <% else %>

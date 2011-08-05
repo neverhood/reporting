@@ -17,10 +17,10 @@ class Report < ActiveRecord::Base
   DATA_MAPPING = {
        :is_null => ' IS NULL ',
         :is_not_null => ' IS NOT NULL ',
-        :starts_with => lambda {|val| " LIKE '#{val.downcase}%' "},
-        :ends_with => lambda {|val| " LIKE '%#{val.downcase}' "},
+        :starts_with => lambda {|type, val| " LIKE '#{val.downcase}%' "},
+        :ends_with => lambda {|type, val| " LIKE '%#{val.downcase}' "},
         :equals => lambda {|type, val| ( type==:integer )? (" = #{val} ") : (" = '#{val.downcase}' ") },
-        :contains => lambda { |val| " LIKE '%#{val.downcase}%' " },
+        :contains => lambda { |type, val| " LIKE '%#{val.downcase}%' " },
         :less_than => lambda { |type, val| ( type == :integer )? " < #{val} " : " < '#{val}' " },
         :more_than => lambda { |type, val| ( type == :integer )? " > #{val} " : " > '#{val}' " },
         :less_or_equal => lambda { |type, val| ( type == :integer )? " <= #{val} " : " <= '#{val}' " },
