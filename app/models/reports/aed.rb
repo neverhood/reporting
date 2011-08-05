@@ -18,6 +18,7 @@ class Aed < ActiveRecord::Base
         :aed_model => [:string, 'Chinese Tentacle Reanimator'],
         :aed_serial_number => :string,
         :location_of_equipment => :string,
+        :placement_in_or_around_location => :string,
         :coordinator => [:string, 'God'],
         :adult_electrode_pads => :date,
         :pediatric_electrode_pads => :date,

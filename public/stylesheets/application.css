@@ -141,6 +141,25 @@ div#report_form {
 	*/
 }
 
+/* DRAG AND DROP */
+div.draggable {
+    cursor:pointer;
+    font-weight:bold;
+    color:red;
+}
+div#selected-columns {
+    width:300px;
+    height:200px;
+    background:black;
+}
+
+div#available-columns {
+    width:300px;
+    height:200px;
+    background:blue;
+}
+/* DRAG AND DROP END */
+
 div#report-filters {
 	/*YG*/
 	background-color:#B2CFFF;

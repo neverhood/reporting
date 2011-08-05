@@ -1,6 +1,10 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+String.prototype.trim = function() {
+    return this.replace(/^\s+|\s+$/g,"");
+};
+
 $(document).ready(function() {
 
     var api = $.reporting = {
@@ -148,7 +152,7 @@ $(document).ready(function() {
     // Below crap was written in haste, I won't leave it like that, I promise
 
     var removeFilter = function() {
-	/*YG: removed 'X' CSS works better here*/
+        /*YG: removed 'X' CSS works better here*/
         return $('<strong class="remove-filter"></strong>').clone();
     };
 
@@ -172,7 +176,7 @@ $(document).ready(function() {
         filter.find('.remove-filter').remove();
         filter.append( filterTypesSelection.bind('change', reportFilterTypeOnChange) ).append( removeFilter );
     };
-/*YG: replaced div with a*/
+    /*YG: replaced div with a*/
     $('a.add-new-filter').click(function() {
         var filter = $('<div class="filter"></div>');
         var reportFieldFilterSelection =  $('.filter-field-dummy').clone().
@@ -215,7 +219,41 @@ $(document).ready(function() {
         }, 2300);
 
         return false;
-    })
+    });
+
+    selectors.selectedColumns = 'div#selected-columns';
+    selectors.availableColumns = 'div#available-columns';
+
+    $('div.draggable').draggable({ revert:'invalid' });
+
+    $('div.droppable').droppable({
+        accept: '.draggable',
+        activeClass: 'ready-to-drop',
+        hoverClass: 'drop-me-bitch',
+        drop: function(event, ui) {
+
+            var $this = $(this),
+                id = $this.attr('id'),
+                column = ui.draggable.text().trim(),
+                oppositeBox = (id == 'available-columns')? 'div#selected-columns' : 'div#available-columns';
+
+            appendDraggable( $this, ui.draggable );
+
+            if ( id == 'available-columns' ) { // Exclude column
+               if ( $(selectors.selectedColumns).children('div.draggable').length > 0 ) {
+                   toggleColumn(column);
+               } else {
+                   appendDraggable( $(selectors.selectedColumns), ui.draggable );
+               }
+            } else { // Include column
+               toggleColumn(column);
+            }
+
+
+
+        }
+    });
+
 
 });
 
@@ -227,5 +265,35 @@ function addPagination(){
             $('form.form_for').submit();
         });
     });
+
+}
+
+/* DRAG AND DROP FUNCTIONS */
+function appendDraggable(element, draggable) {
+    element.append( draggable.removeAttr('style') ); // Remove 'position', 'top' and 'left'
+    draggable.css({
+        position: 'relative'  // Retain the position and draggability (how do you like this word?)
+    });
+}
+
+function toggleColumn(column) {
+    var table = $('#report'),
+        columnNumber,
+        header;
+
+    $.each( table.find('th'), function(index, element) {
+        if ( $(element).attr('abbr') == column ) {
+            columnNumber = index + 1;
+            header = $(element);
+        }
+    });
+
+    if ( header.is(':visible') ) {
+        table.find('td:nth-child(' + columnNumber + ')').hide();
+        header.hide();
+    } else {
+        table.find('td:nth-child(' + columnNumber + ')').show();
+        header.show();
+    }
 
 }

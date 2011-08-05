@@ -13,16 +13,35 @@
       <%= f.hidden_field :csv, :value => "false" %>
       <%= f.fields_for :fields do |fields| %>
 
-          <div id='report-fields'>
-            <h2>Fields</h2>
-            <div class="hint">please choose at least one field</div>
+          <!--<div id='report-fields'>-->
+            <!--<h2>Fields</h2>-->
+            <!--<div class="hint">please choose at least one field</div>-->
 
-            <% @report_engine.fields.each do |field| %>
-                <span class='field'> <%= field %> </span>
-                <%= fields.check_box field.to_sym, :checked => true, 'data-field-name' => field %> <br />
-            <% end %>
+            <!--<% @report_engine.fields.each do |field| %>-->
+                <!--<span class='field'> <%= field %> </span>-->
+                <%= fields.check_box field.to_sym, :checked => true, 'data-field-name' => field, :class => :hidden %> <br />
+            <!--<% end %>-->
 
+          <!--</div>-->
+
+
+          DRAG AND DROP THIS SHIT <br />
+
+          AVAILABLE COLUMNS (DROP COLUMN HERE IF YOU WANT TO EXCLUDE COLUMN, BITCH)
+          <div id='available-columns' class='droppable'>
           </div>
+
+          SELECTED COLUMNS (DROP COLUMN HERE IF YOU WANT TO INCLUDE COLUMN, FUCKING SHIT)
+          <div id='selected-columns' class='droppable'>
+            <% @report_engine.fields.each do |field| %>
+                <div class='draggable'>
+                  <%= field %>
+                </div>
+            <% end %>
+          </div>
+
+
+
       <% end %>
       <div class="central">
         <div id='report-filters'>

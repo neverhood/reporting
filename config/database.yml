@@ -10,10 +10,10 @@ development:
   encoding: utf8
   reconnect: false
   host: localhost 
-  database: report
+  database: report_gen
   pool: 15
   username: root
-  password: k2o32
+  password: zxc1
   port: 3306
 #  socket: /var/run/mysqld/mysqld.sock
 
