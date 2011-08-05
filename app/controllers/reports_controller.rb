@@ -48,15 +48,10 @@ class ReportsController < ApplicationController
   end
 
   def valid_params   # What, am I too pedantic?
-    fields = params[:report][:fields].reject {|key,value| value.to_i != 1}.keys.map(&:to_sym)
+    @fields = params[:report][:fields]
     @order = params[:report][:order_by] + ' ' + params[:report][:order_type]
     @report_engine = Report::TYPES[params[:report][:type].to_sym]
-    if fields.length > 0 && ((@report_engine.fields - fields).size == (@report_engine.fields.size - fields.size)) # Smart, eh?
-      @fields = fields.join(',')
-      @filters = parse_filters(@report_engine, params[:report][:filters]) if params[:report][:filters]
-    else
-      render guilty_response
-    end
+    @filters = parse_filters(@report_engine, params[:report][:filters]) if params[:report][:filters]
   end
 
   def pagination

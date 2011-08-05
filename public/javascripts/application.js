@@ -224,7 +224,13 @@ $(document).ready(function() {
     selectors.selectedColumns = 'div#selected-columns';
     selectors.availableColumns = 'div#available-columns';
 
-    $('div.draggable').draggable({ revert:'invalid' });
+    $('div.draggable').draggable({
+        revert:'invalid',
+        start: function() {   // We need to track where column has been dragged from initially
+            var $this = $(this);
+            $this.data('dragged-from', $this.parent().attr('id') );
+        }
+    });
 
     $('div.droppable').droppable({
         accept: '.draggable',
@@ -235,22 +241,25 @@ $(document).ready(function() {
             var $this = $(this),
                 id = $this.attr('id'),
                 column = ui.draggable.text().trim(),
-                oppositeBox = (id == 'available-columns')? 'div#selected-columns' : 'div#available-columns';
+                selectedColumnsAmount = $('div#selected-columns').children('div.draggable').length;
 
             appendDraggable( $this, ui.draggable );
 
-            if ( id == 'available-columns' ) { // Exclude column
-               if ( $(selectors.selectedColumns).children('div.draggable').length > 0 ) {
-                   toggleColumn(column);
-               } else {
-                   appendDraggable( $(selectors.selectedColumns), ui.draggable );
-               }
-            } else { // Include column
-               toggleColumn(column);
+            if ( id != ui.draggable.data('dragged-from') ) { // Thanks for a valid drop
+
+                if ( id == 'available-columns' ) { // Exclude column
+                    if ( selectedColumnsAmount > 0 )
+                        toggleColumn(column);
+                    else
+                        appendDraggable( $(selectors.selectedColumns), ui.draggable ); // Revert back
+                } else { // Include column
+                    toggleColumn(column);
+                }
+
+
+                serializeFields();
+
             }
-
-
-
         }
     });
 
@@ -295,5 +304,17 @@ function toggleColumn(column) {
         table.find('td:nth-child(' + columnNumber + ')').show();
         header.show();
     }
+
+}
+
+function serializeFields() {
+    var fields = [];
+
+    $.each( $('div#selected-columns'), function() {
+        fields.push( $(this).text().trim() );
+    });
+
+    $('input#report_fields').val( fields.join(',') );
+
 
 }

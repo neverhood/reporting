@@ -10,9 +10,8 @@
       </h1>
       <%= f.hidden_field :type, :value => @report.type %>
       <%= f.hidden_field :page, :value => "1" %>
-      <%= f.hidden_field :csv, :value => "false" %>
-      <%= f.fields_for :fields do |fields| %>
 
+      <%= f.hidden_field :fields, :value => @report_engine.fields.join(',') %>
 
           DRAG AND DROP THIS SHIT <br />
 
@@ -31,7 +30,7 @@
 
 
 
-      <% end %>
+
       <div class="central">
         <div id='report-filters'>
           <h2>Filter</h2>
