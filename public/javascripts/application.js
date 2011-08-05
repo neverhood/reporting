@@ -98,43 +98,44 @@ $(document).ready(function() {
 
 
     // ORDER BY Fields Selection
-    selectors.reportFields.click(function() {
-        // If user unchecks one of the fields - hide the corresponding ORDER BY and FILTER FOR options
-        // If the corresponding option is selected - select another for for user
-        // When user checks the checkbox - show the option back
-        var $this = $(this),
-                checked = $this.prop('checked'),
-                fieldName = $this.attr('data-field-name'),
-                orderByOption = selectors.orderBy.find('option[value="' + fieldName + '"]'),
-                filterForOption = selectors.filtersForFields.find('option[value="' + fieldName + '"]'),
-                options = [orderByOption, filterForOption],
-                synchronizeFields = function() {
-                    // User doesn't want the current 'ORDER BY' or 'FILTER FOR' (or both) field to be included into report.
-                    // Select closest field for him and hide the current option
-                    var field = $.reporting.selectors.reportFieldsContainer.
-                            find('input[type="checkbox"]').filter(':checked').first().attr('data-field-name');
-                    if (orderByOption.is(':selected')) selectors.orderBy.val(field);
-                    if (filterForOption.is(':selected')) selectors.filtersForFields.val(field);
-                };
-
-        if ((orderByOption.is(':selected') || filterForOption.is(':selected'))  && !checked) {
-            synchronizeFields();
-            $.each(options, function() {this.hide()});
-        } else {
-            checked? $.each(options, function() {this.show()}) :
-                    $.each(options, function() {this.hide()});
-        }
-
-        if ( utils.checkedReportFields().length == 0 ) {
-            $this.prop('checked', true);
-            $.each(options, function() {this.show().attr('selected', true)});
-        }
-    });
+//    selectors.reportFields.click(function() {
+//        // If user unchecks one of the fields - hide the corresponding ORDER BY and FILTER FOR options
+//        // If the corresponding option is selected - select another for for user
+//        // When user checks the checkbox - show the option back
+//        var $this = $(this),
+//                checked = $this.prop('checked'),
+//                fieldName = $this.attr('data-field-name'),
+//                orderByOption = selectors.orderBy.find('option[value="' + fieldName + '"]'),
+//                filterForOption = selectors.filtersForFields.find('option[value="' + fieldName + '"]'),
+//                options = [orderByOption, filterForOption],
+//                synchronizeFields = function() {
+//                    // User doesn't want the current 'ORDER BY' or 'FILTER FOR' (or both) field to be included into report.
+//                    // Select closest field for him and hide the current option
+//                    var field = $.reporting.selectors.reportFieldsContainer.
+//                            find('input[type="checkbox"]').filter(':checked').first().attr('data-field-name');
+//                    if (orderByOption.is(':selected')) selectors.orderBy.val(field);
+//                    if (filterForOption.is(':selected')) selectors.filtersForFields.val(field);
+//                };
+//
+//        if ((orderByOption.is(':selected') || filterForOption.is(':selected'))  && !checked) {
+//            synchronizeFields();
+//            $.each(options, function() {this.hide()});
+//        } else {
+//            checked? $.each(options, function() {this.show()}) :
+//                    $.each(options, function() {this.hide()});
+//        }
+//
+//        if ( utils.checkedReportFields().length == 0 ) {
+//            $this.prop('checked', true);
+//            $.each(options, function() {this.show().attr('selected', true)});
+//        }
+//    });
 
 
     $('form#new_report').bind('ajax:complete', function(event, xhr, status) {
         if ( status = 'success' ) {
             $('#report-placeholder').html($.parseJSON(xhr.responseText).table);
+            $('#report').removeClass('report-preview');
             $('input[name="report[page]"]').val("1");
             addPagination();
             $("tr:nth-child(odd)").addClass("alt");
@@ -239,24 +240,26 @@ $(document).ready(function() {
         drop: function(event, ui) {
 
             var $this = $(this),
-                id = $this.attr('id'),
-                column = ui.draggable.text().trim(),
-                selectedColumnsAmount = $('div#selected-columns').children('div.draggable').length;
+                    id = $this.attr('id'),
+                    column = ui.draggable.text().trim(),
+                    selectedColumnsAmount = $('div#selected-columns').children('div.draggable').length;
 
             appendDraggable( $this, ui.draggable );
 
             if ( id != ui.draggable.data('dragged-from') ) { // Thanks for a valid drop
 
                 if ( id == 'available-columns' ) { // Exclude column
-                    if ( selectedColumnsAmount > 0 )
+                    if ( selectedColumnsAmount > 1 ) {
                         toggleColumn(column);
-                    else
+                    }
+                    else {
                         appendDraggable( $(selectors.selectedColumns), ui.draggable ); // Revert back
+                    }
                 } else { // Include column
                     toggleColumn(column);
                 }
 
-
+                synchronizeFields( ui.draggable );
                 serializeFields();
 
             }
@@ -287,8 +290,8 @@ function appendDraggable(element, draggable) {
 
 function toggleColumn(column) {
     var table = $('#report'),
-        columnNumber,
-        header;
+            columnNumber,
+            header;
 
     $.each( table.find('th'), function(index, element) {
         if ( $(element).attr('abbr') == column ) {
@@ -307,10 +310,26 @@ function toggleColumn(column) {
 
 }
 
+function synchronizeFields( column ) {
+    var selectors = $.reporting.selectors,
+        columnName = column.text().trim(),
+            orderByOption = selectors.orderBy.find('option[value="' + columnName + '"]'),
+            containerId = column.parent().attr('id'),
+            columnToSelect = $('div#selected-columns').children().first().text().trim();
+
+    if ( containerId == 'available-columns' ) { // Exclude column
+        orderByOption.hide();
+        if ( orderByOption.is(':selected')) selectors.orderBy.val( columnToSelect );
+    } else { // Include column
+        orderByOption.show();
+    }
+
+}
+
 function serializeFields() {
     var fields = [];
 
-    $.each( $('div#selected-columns'), function() {
+    $.each( $('div#selected-columns').children(), function() {
         fields.push( $(this).text().trim() );
     });
 

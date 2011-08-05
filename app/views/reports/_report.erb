@@ -3,7 +3,7 @@
   <%= render :partial => 'paging' %>
 </div>
 
-<table id='report' class='<%= @report_engine.name.underscore %>_report' cellspacing="0">
+<table id='report' class='<%= @report_engine.name.underscore %>_report report-preview' cellspacing="0">
 
   <% if @objects %>
       <tr id='report-header'>
