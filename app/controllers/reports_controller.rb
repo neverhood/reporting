@@ -58,7 +58,7 @@ class ReportsController < ApplicationController
     @page = (params[:report][:page] ||= 1).to_i
     @offset = (@page - 1) * ITEMS_PER_PAGE
     @amount = @report_engine.
-        select(@fields).
+        select('*').
         from(@report_engine.view).
         where(@filters).
         count
