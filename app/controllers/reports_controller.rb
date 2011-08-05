@@ -40,12 +40,6 @@ class ReportsController < ApplicationController
 
   end
 
-  def update
-    render :update do |page|
-      page.alert('hello')
-    end
-  end
-
   private
 
   def valid_report_type

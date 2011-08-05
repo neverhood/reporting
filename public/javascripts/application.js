@@ -250,17 +250,14 @@ $(document).ready(function() {
 
                 if ( id == 'available-columns' ) { // Exclude column
                     if ( selectedColumnsAmount > 1 ) {
-                        toggleColumn(column);
+                        toggleColumn(ui.draggable);
                     }
                     else {
                         appendDraggable( $(selectors.selectedColumns), ui.draggable ); // Revert back
                     }
                 } else { // Include column
-                    toggleColumn(column);
+                    toggleColumn(ui.draggable);
                 }
-
-                synchronizeFields( ui.draggable );
-                serializeFields();
 
             }
         }
@@ -292,28 +289,37 @@ function appendDraggable(element, draggable) {
 function toggleColumn(column) {
     var table = $('#report'),
             columnNumber,
+            columnName = column.text().trim(),
             header;
 
+    serializeFields();
+    synchronizeFields( column );
+
     $.each( table.find('th'), function(index, element) {
-        if ( $(element).attr('abbr') == column ) {
+        if ( $(element).attr('abbr') == columnName ) {
             columnNumber = index + 1;
             header = $(element);
         }
     });
 
-    if ( header.is(':visible') ) {
-        table.find('td:nth-child(' + columnNumber + ')').hide();
-        header.hide();
-    } else {
-        table.find('td:nth-child(' + columnNumber + ')').show();
-        header.show();
+    if ( header ) { // Column is there, you just don't see it ( because it's hidden, your eyes are fine I guess )
+        if ( header.is(':visible') ) {
+            table.find('td:nth-child(' + columnNumber + ')').hide();
+            header.hide();
+        } else {
+            table.find('td:nth-child(' + columnNumber + ')').show();
+            header.show();
+        }
+    } else { // Report was generated without your column, please wait until we get it for you
+        $('form#new_report').submit();
     }
 
 }
 
 function synchronizeFields( column ) {
+    // Since you didn't want this column to be included in report we're removing it from ORDER BY selection. Blame yourself, I'm just saying
     var selectors = $.reporting.selectors,
-        columnName = column.text().trim(),
+            columnName = column.text().trim(),
             orderByOption = selectors.orderBy.find('option[value="' + columnName + '"]'),
             containerId = column.parent().attr('id'),
             columnToSelect = $('div#selected-columns').children().first().text().trim();
