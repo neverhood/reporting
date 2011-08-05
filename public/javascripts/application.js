@@ -96,43 +96,8 @@ $(document).ready(function() {
 
     api.reportFieldsAmount = api.reportFields.length;
 
-
-    // ORDER BY Fields Selection
-//    selectors.reportFields.click(function() {
-//        // If user unchecks one of the fields - hide the corresponding ORDER BY and FILTER FOR options
-//        // If the corresponding option is selected - select another for for user
-//        // When user checks the checkbox - show the option back
-//        var $this = $(this),
-//                checked = $this.prop('checked'),
-//                fieldName = $this.attr('data-field-name'),
-//                orderByOption = selectors.orderBy.find('option[value="' + fieldName + '"]'),
-//                filterForOption = selectors.filtersForFields.find('option[value="' + fieldName + '"]'),
-//                options = [orderByOption, filterForOption],
-//                synchronizeFields = function() {
-//                    // User doesn't want the current 'ORDER BY' or 'FILTER FOR' (or both) field to be included into report.
-//                    // Select closest field for him and hide the current option
-//                    var field = $.reporting.selectors.reportFieldsContainer.
-//                            find('input[type="checkbox"]').filter(':checked').first().attr('data-field-name');
-//                    if (orderByOption.is(':selected')) selectors.orderBy.val(field);
-//                    if (filterForOption.is(':selected')) selectors.filtersForFields.val(field);
-//                };
-//
-//        if ((orderByOption.is(':selected') || filterForOption.is(':selected'))  && !checked) {
-//            synchronizeFields();
-//            $.each(options, function() {this.hide()});
-//        } else {
-//            checked? $.each(options, function() {this.show()}) :
-//                    $.each(options, function() {this.hide()});
-//        }
-//
-//        if ( utils.checkedReportFields().length == 0 ) {
-//            $this.prop('checked', true);
-//            $.each(options, function() {this.show().attr('selected', true)});
-//        }
-//    });
-
-
     $('form#new_report').bind('ajax:complete', function(event, xhr, status) {
+        $(this).next().remove();
         if ( status = 'success' ) {
             $('#report-placeholder').html($.parseJSON(xhr.responseText).table);
             $('#report').removeClass('report-preview');
@@ -143,6 +108,8 @@ $(document).ready(function() {
         }
     }).bind('submit', function() {
         $.reporting.utils.serializeFilters();
+    }).bind('ajax:beforeSend', function() {
+        $(this).after( $.reporting.loader )
     });
 
     $('strong.remove-filter').live('click', function() {
@@ -231,12 +198,12 @@ $(document).ready(function() {
             var $this = $(this);
             $this.data('dragged-from', $this.parent().attr('id') );
         }
+    }).hover(function() {
+        $(this).toggleClass('draggable-on-hover')
     });
 
     $('div.droppable').droppable({
         accept: '.draggable',
-        activeClass: 'ready-to-drop',
-        hoverClass: 'drop-me-bitch',
         drop: function(event, ui) {
 
             var $this = $(this),

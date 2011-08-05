@@ -158,6 +158,9 @@ div#available-columns {
     height:200px;
     background:blue;
 }
+div.draggable-on-hover {
+    background: green;
+}
 /* DRAG AND DROP END */
 
 div#report-filters {
