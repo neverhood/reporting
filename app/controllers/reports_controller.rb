@@ -40,6 +40,10 @@ class ReportsController < ApplicationController
 
   end
 
+  def update
+
+  end
+
   private
 
   def valid_report_type

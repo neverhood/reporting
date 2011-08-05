@@ -281,6 +281,7 @@ function addPagination(){
 }
 
 /* DRAG AND DROP FUNCTIONS */
+
 function appendDraggable(element, draggable) {
     element.append( draggable.removeAttr('style') ); // Remove 'position', 'top' and 'left'
     draggable.css({
@@ -334,6 +335,4 @@ function serializeFields() {
     });
 
     $('input#report_fields').val( fields.join(',') );
-
-
 }

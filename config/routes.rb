@@ -6,13 +6,9 @@ ReportGen::Application.routes.draw do
   #  :create(post) -> Produces the report
   #  :customize(post) -> This is where user will choose the fields and set the filters
 
-  resources :reports, :only => [:create] do
-    post :customize, :on => :collection
-  end
+  resources :reports, :only => [:create, :update]
 
   match 'reports/customize/:report' => 'reports#customize', :as => :customize
-
-  match 'reports/file_sender' => 'reports#file_sender'
 
 
   # The priority is based upon order of creation:
