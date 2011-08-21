@@ -37,6 +37,10 @@ module AbstractTable
       ]
     end
 
+    def abstract_table?
+      true
+    end
+
   end
 
   def method_missing(name, *args, &blk)  # instance's one
@@ -55,19 +59,13 @@ module AbstractTable
       # set in `set_field_types_and_defaults` class method
       scope :report, from(view)
 
-
       # A little bit dirty ( delegating instance methods of class Class ) but useful as hell
       class << self
         delegate :first, :last, :where, :all, :limit, :to => :report # essential ones, want to name more? :) Feel free to populate
       end
 
-
     end
 
   end
-
-
-
-
 
 end
