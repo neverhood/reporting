@@ -13,20 +13,6 @@
 
       <%= f.hidden_field :fields, :value => @report_engine.fields.join(',') %>
 
-          DRAG AND DROP THIS SHIT <br />
-
-          AVAILABLE COLUMNS (DROP COLUMN HERE IF YOU WANT TO EXCLUDE COLUMN, BITCH)
-          <div id='available-columns' class='droppable'>
-          </div>
-
-          SELECTED COLUMNS (DROP COLUMN HERE IF YOU WANT TO INCLUDE COLUMN, FUCKING SHIT)
-          <div id='selected-columns' class='droppable'>
-            <% @report_engine.fields.each do |field| %>
-                <div class='draggable'>
-                  <%= field %>
-                </div>
-            <% end %>
-          </div>
 
 
 
@@ -60,6 +46,23 @@
 
       </div>
   <% end %>
+
+  <div class="wrapper_available_cols">
+      <h3>Excluded columns</h3>
+      <div id='available-columns' class='droppable'></div>
+  </div>
+
+  <div class="wrapper_selected_cols">
+      <h3>Selected columns</h3>
+      <div id='selected-columns' class='droppable'>
+          <% @report_engine.fields.each do |field| %>
+              <div class='draggable'>
+                  <%= field %>
+              </div>
+          <% end %>
+      </div>
+  </div>
+
   <div style="clear:both;"></div>
 </div>
 

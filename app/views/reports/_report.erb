@@ -8,7 +8,7 @@
   <% if @objects %>
       <tr id='report-header'>
         <% @objects.first.attrs.keys.each do |field| %>
-            <th scope="col" abbr="<%= field %>"><%= field %></th>
+            <th scope="col" abbr="<%= field %>"><%= field.to_s.humanize %></th>
         <% end %>
       </tr>
 

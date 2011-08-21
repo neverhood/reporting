@@ -24,7 +24,7 @@ h1, h2, h3 {
 .wrapper {
 /*-28px = footer height */
     margin: 0 auto -28px auto;
-    width: 960px;
+    width: 1000px;
     min-height: 100%;
     height: auto !important;
     position: relative;
@@ -121,7 +121,7 @@ th {
 	text-transform: uppercase;
 	text-align: left;
 	padding: 6px 6px 6px 12px;
-	background: #CAE8EA url(/images/bg_header.jpg) no-repeat;
+	background-color: #CAE8EA;
 }
 
 td {
@@ -144,22 +144,35 @@ div#report_form {
 /* DRAG AND DROP */
 div.draggable {
     cursor:pointer;
-    font-weight:bold;
-    color:red;
+    background-color:#CAE8EA;
+    font: bold 10px "Trebuchet MS",Verdana,Arial,Helvetica,sans-serif;
+    letter-spacing: 2px;
+    padding: 6px 6px 6px 12px;
+    text-align: left;
+    text-transform: uppercase;
+    color: #4F6B72;
+}
+
+div.draggable:hover {
+    background-color:#4e8589;
+    color:#f5f5f5;
+}
+div.wrapper_available_cols{
+    float:left;
+}
+div.wrapper_selected_cols{
+    float:left;
+    margin-left:50px;
+}
+div#available-columns {
+    width:300px;
+    height:250px;
+    border:1px dotted gray;
 }
 div#selected-columns {
     width:300px;
-    height:200px;
-    background:black;
-}
-
-div#available-columns {
-    width:300px;
-    height:200px;
-    background:blue;
-}
-div.draggable-on-hover {
-    background: green;
+    height:250px;
+    border:1px dotted gray;
 }
 /* DRAG AND DROP END */
 
@@ -295,7 +308,7 @@ background-image: url("../images/choose.png");
 }
 .central{
 width:708px;
-padding-left:12px;
+margin-top:12px;
 float:left;
 }
 .filter{

@@ -106,10 +106,12 @@ $(document).ready(function() {
             $("tr:nth-child(odd)").addClass("alt");
 
         }
+        $('#ajax-load-background').hide();
     }).bind('submit', function() {
         $.reporting.utils.serializeFilters();
     }).bind('ajax:beforeSend', function() {
-        $(this).after( $.reporting.loader )
+        $(this).after( $.reporting.loader );
+        $('#ajax-load-background').show();
     });
 
     $('strong.remove-filter').live('click', function() {
@@ -164,8 +166,6 @@ $(document).ready(function() {
 
     $('a#download-csv').click(function(event) {
         event.preventDefault();
-
-        $('#ajax-load-background').show();
         var form = $('form#new_report').
                 removeAttr('data-remote'), // Calm down, we'll set it back
                 jqExpando = [];
@@ -182,10 +182,6 @@ $(document).ready(function() {
         form.submit();
         form.attr('data-remote', true);  // Man said - man did
         form.data( jqExpando[0], jqExpando[1] );
-        setTimeout(function(){
-            $('#ajax-load-background').hide()
-        }, 2300);
-
         return false;
     });
 
@@ -198,8 +194,6 @@ $(document).ready(function() {
             var $this = $(this);
             $this.data('dragged-from', $this.parent().attr('id') );
         }
-    }).hover(function() {
-        $(this).toggleClass('draggable-on-hover')
     });
 
     $('div.droppable').droppable({
