@@ -122,6 +122,7 @@ $(document).ready(function() {
         $('#ajax-load-background').hide();
     }).bind('submit', function() {
         $.reporting.utils.serializeFilters();
+        serializeFields();
     }).bind('ajax:beforeSend', function() {
         $(this).after( $.reporting.loader );
         $('#ajax-load-background').show();
@@ -291,17 +292,43 @@ function toggleColumn(col) {
 
     if ( column ) { 
         if ( column.header.is(':visible') ) {
-            column.elements.hide();
-            column.header.hide();
+            hideColumn(column);
         } else {
-            column.elements.show();
-            column.header.show();
+            if ( orderChanged() ) {
+                appendColumn( column );
+            } else {
+                showColumn();
+            }
         }
     } else {
         serializeFields();
         $('form#new_report').submit();
     }
 
+}
+
+function appendColumn(column) {
+    var reportRows = $('#report').find('tr').toArray(),
+        elements = column.elements.toArray();
+
+    reportRows.shift(); reportRows.pop(); // Remove header and footer rows
+
+    $('#report-header').append( column.header.show() ); // Append header
+
+    $.each(reportRows, function() { // append elements
+        $(this).
+            append( $( elements.shift() ).show() );
+    });
+}
+
+function showColumn(column) {
+    column.header.show();
+    column.elements.show();
+};
+
+function hideColumn(column) {
+    column.header.hide();
+    column.elements.hide();
 }
 
 function synchronizeFields( column ) {
