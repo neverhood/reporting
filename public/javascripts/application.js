@@ -234,6 +234,8 @@ $(document).ready(function() {
                     toggleColumn(ui.draggable);
                 }
 
+            } else if ( ui.draggable.data('dragged-from') == 'selected-columns' ) {
+                appendColumn( reportColumn(ui.draggable) );
             }
         }
     });
@@ -297,7 +299,7 @@ function toggleColumn(col) {
             if ( orderChanged() ) {
                 appendColumn( column );
             } else {
-                showColumn();
+                showColumn(column);
             }
         }
     } else {
