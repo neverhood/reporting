@@ -5,6 +5,19 @@ String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g,"");
 };
 
+Array.prototype.equals = function(array) { 
+    var result = true;
+
+    for ( element in this ) {
+        if ( this[element] != array[element] ) {
+            result = false;
+            break;
+        }
+    }
+
+    return result;
+};
+
 $(document).ready(function() {
 
     var api = $.reporting = {
@@ -247,31 +260,45 @@ function appendDraggable(element, draggable) {
     });
 }
 
-function toggleColumn(column) {
+function reportColumn(col) {
     var table = $('#report'),
-            columnNumber,
-            columnName = column.text().trim(),
-            header;
-
-    serializeFields();
-    synchronizeFields( column );
+        columnNumber,
+        columnName = col.text().trim(),
+        columnHeader,
+        columnElements = [];
 
     $.each( table.find('th'), function(index, element) {
         if ( $(element).attr('abbr') == columnName ) {
             columnNumber = index + 1;
-            header = $(element);
+            columnHeader = $(element);
         }
     });
 
-    if ( header ) { // Column is there, you just don't see it ( because it's hidden, your eyes are fine I guess )
-        if ( header.is(':visible') ) {
-            table.find('td:nth-child(' + columnNumber + ')').hide();
-            header.hide();
+    if ( columnHeader ) { // Column is there but is hidden
+        columnElements = table.find('td:nth-child(' + columnNumber + ')');
+        return { header: columnHeader, elements: columnElements };
+    } else { // Report has been generated without this column
+        return null;
+    }
+
+}
+
+function toggleColumn(col) {
+
+    var column = reportColumn(col);
+
+    synchronizeFields( col );
+
+    if ( column ) { 
+        if ( column.header.is(':visible') ) {
+            column.elements.hide();
+            column.header.hide();
         } else {
-            table.find('td:nth-child(' + columnNumber + ')').show();
-            header.show();
+            column.elements.show();
+            column.header.show();
         }
-    } else { // Report was generated without your column, please wait until we get it for you
+    } else {
+        serializeFields();
         $('form#new_report').submit();
     }
 
@@ -294,12 +321,32 @@ function synchronizeFields( column ) {
 
 }
 
-function serializeFields() {
-    var fields = [];
+function selectedReportColumns() {
+    var columns = [];
 
     $.each( $('div#selected-columns').children(), function() {
-        fields.push( $(this).text().trim() );
+        columns.push( $(this).text().trim() );
     });
 
-    $('input#report_fields').val( fields.join(',') );
+    return columns;
+}
+
+function serializeFields() {
+    $('input#report_fields').val( selectedReportColumns().join(',') );
+}
+
+function orderChanged() {
+    var reportColumns = selectedReportColumns(),
+        serializedColumns = $('input#report_fields').val().split(','),
+        serializedAndVisibleOrder = [],
+        result = false;
+
+    if ( reportColumns.length == serializedColumns.length ) {
+        result = reportColumns.equals( serializedColumns );
+    } else {
+        serializedAndVisibleOrder = serializedColumns.slice(0, reportColumns.length);
+        result = reportColumns.equals( serializedAndVisibleOrder );
+    }
+
+    return !result;
 }

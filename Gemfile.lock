@@ -40,7 +40,6 @@ GEM
     builder (2.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    fastercsv (1.5.4)
     i18n (0.5.0)
     jquery-rails (1.0.12)
       railties (~> 3.0)
@@ -92,7 +91,6 @@ PLATFORMS
 
 DEPENDENCIES
   authlogic!
-  fastercsv
   jquery-rails
   mysql2 (< 0.3)
   rails (= 3.0.7)

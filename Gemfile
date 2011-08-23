@@ -28,7 +28,7 @@ gem "s3"
 # Use unicorn as the web server
 gem 'unicorn'
 
-gem 'fastercsv'
+#gem 'fastercsv'
 
 # Deploy with Capistrano
 # gem 'capistrano'
