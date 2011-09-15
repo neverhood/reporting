@@ -1,3 +1,9 @@
+<% content_for :head do %>
+  <%= javascript_include_tag 'dragtable' %>
+
+  <%= stylesheet_link_tag 'dragtable' %>
+<% end %>
+
 <div id="report_form">
   <%= form_for @report,:html => { :class => "form_for"}, :remote => true do |f| %>
       <div class="toolbar">

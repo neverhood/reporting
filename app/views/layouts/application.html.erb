@@ -7,6 +7,7 @@
   <%= javascript_include_tag :defaults%>
   <%= javascript_include_tag 'jquery-ui' %>
   <%= csrf_meta_tag %>
+  <%= yield(:head) %>
 </head>
 <body>
 <div class="wrapper">
@@ -18,13 +19,15 @@
     <%= yield %>
   </div>
   <div class="footer_spacer"></div>
- </div>
+</div>
 <div class="footer">&copy <a href="mailto:#">Client</a>, 2011</div>
 <div id="ajax-load-background">
-<div id="ajax-load">
-  <div id="ajax-load-title">Loading</div><div id="ajax-load-help">please wait</div>
+  <div id="ajax-load">
+    <div id="ajax-load-title">Loading</div><div id="ajax-load-help">please wait</div>
+  </div>
 </div>
-    </div>
+
+
 </body>
 </html>
 

@@ -6,12 +6,16 @@
 <table id='report' class='<%= @report_engine.name.underscore %>_report report-preview' cellspacing="0">
 
   <% if @objects %>
+      <thead>
       <tr id='report-header'>
         <% @objects.first.attrs.keys.each do |field| %>
-            <th scope="col" abbr="<%= field %>"><%= field.to_s.humanize %></th>
+            <th scope="col" data-header="<%= field %>" abbr="<%= field %>"><%= field.to_s.humanize %></th>
+
         <% end %>
       </tr>
+      </thead>
 
+      <tbody>
       <% @objects.each do |object| %>
           <tr>
             <% object.attrs.values.each do |value| %>
@@ -20,9 +24,8 @@
           </tr>
       <% end %>
 
-      <tr id='report-footer' data-all='<%= @amount %>'>
-        All: <%= @amount %>,visible: <%= @objects.length %>
-      </tr>
+      </tbody>
+
   <% else %>
       No results found, please change filters and try again
   <% end %>
@@ -32,3 +35,9 @@
 
 
 </table>
+
+<% if @objects %>
+    <div id='report-footer' data-all='<%= @amount %>'>
+      All: <%= @amount %>, visible: <%= @objects.length %>
+    </div>
+<% end %>

@@ -86,6 +86,12 @@ $(document).ready(function() {
             }
         });
 
+        $('table').dragtable({
+            change: function() {
+                alert( 'wtf' );
+            }
+        });
+
 
         $('#new_report').find('input[name*="report[filters]"]').remove();
 
@@ -111,8 +117,11 @@ $(document).ready(function() {
 
     api.reportFieldsAmount = api.reportFields.length;
 
+    $('table').dragtable();
+
     $('form#new_report').bind('ajax:complete', function(event, xhr, status) {
         $(this).next().remove();
+
         if ( status = 'success' ) {
             $('#report-placeholder').html($.parseJSON(xhr.responseText).table);
             $('#report').removeClass('report-preview');
@@ -121,6 +130,7 @@ $(document).ready(function() {
             $("tr:nth-child(odd)").addClass("alt");
 
         }
+
         $('#ajax-load-background').hide();
     }).bind('submit', function() {
         $.reporting.utils.serializeFilters();
@@ -241,7 +251,7 @@ function rebuildTable() {
     var reportRows = $('#report tr').toArray(),
             columns = allIncludedReportColumns();
 
-    reportRows.shift(); reportRows.pop();
+    reportRows.shift(); // Remove header
 
     $.each( columns, function() {
 
