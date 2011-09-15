@@ -239,6 +239,11 @@ $(document).ready(function() {
         $('#ajax-load-background').show();
     });
 
+    $('#report_submit').click(function( event ) {
+        event.preventDefault();
+        serializeAndSubmit();
+    });
+
     $('strong.remove-filter').live('click', function() {
         $(this).parent('.filter').remove();
     });
