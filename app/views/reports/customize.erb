@@ -49,14 +49,14 @@
 
   <div class="wrapper_available_cols">
       <h3>Excluded columns</h3>
-      <div id='available-columns' class='droppable'></div>
+      <div id='available-columns' class='connectedSortable'></div>
   </div>
 
   <div class="wrapper_selected_cols">
       <h3>Selected columns</h3>
-      <div id='selected-columns' class='droppable'>
+      <div id='selected-columns' class='connectedSortable'>
           <% @report_engine.fields.each do |field| %>
-              <div class='draggable'>
+              <div class='column-header'>
                   <%= field %>
               </div>
           <% end %>
