@@ -1,6 +1,52 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+jQuery.fn.sortElements = (function(){
+
+    var sort = [].sort;
+
+    return function(comparator, getSortable) {
+
+        getSortable = getSortable || function(){return this;};
+
+        var placements = this.map(function(){
+
+            var sortElement = getSortable.call(this),
+                    parentNode = sortElement.parentNode,
+
+                // Since the element itself will change position, we have
+                // to have some way of storing it's original position in
+                // the DOM. The easiest way is to have a 'flag' node:
+                    nextSibling = parentNode.insertBefore(
+                            document.createTextNode(''),
+                            sortElement.nextSibling
+                            );
+
+            return function() {
+
+                if (parentNode === this) {
+                    throw new Error(
+                            "You can't sort elements if any one is a descendant of another."
+                            );
+                }
+
+                // Insert before flag:
+                parentNode.insertBefore(this, nextSibling);
+                // Remove flag:
+                parentNode.removeChild(nextSibling);
+
+            };
+
+        });
+
+        return sort.call(this, comparator).each(function(i){
+            placements[i].call(getSortable.call(this));
+        });
+
+    };
+
+})();
+
 String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g,"");
 };
@@ -86,11 +132,6 @@ $(document).ready(function() {
             }
         });
 
-        $('table').dragtable({
-            change: function() {
-                alert( 'wtf' );
-            }
-        });
 
 
         $('#new_report').find('input[name*="report[filters]"]').remove();
@@ -110,6 +151,53 @@ $(document).ready(function() {
         });
     };
 
+    utils.dragtableHandler =  {
+        change: function() {
+            var columnsOrder = $(this).dragtable('order');
+            var selectedColumns = $('#selected-columns');
+
+            $.each( columnsOrder.reverse(), function(index) {
+                var selector = ':contains("' + columnsOrder[index] + '")';
+
+                $('#selected-columns').
+                        prepend( selectedColumns.find( selector ) );
+            });
+
+
+        }
+    };
+
+    $('#report').dragtable(utils.dragtableHandler);
+
+    $('table#report th').live('click', function() {
+        var table = $('#report'),
+                $this = $(this),
+                thIndex = $this.index(),
+                inverse = $(this).data('inverse');
+
+
+        table.find('td').filter(function() {
+            return $(this).index() === thIndex;
+        }).sortElements(function(a, b) {
+            if ( parseInt(a.innerText) && parseInt(b.innerText) ) {
+                return parseInt(a.innerText) > parseInt(b.innerText) ?
+                        inverse ? -1 : 1
+                        : inverse ? 1 : -1;
+            } else {
+                return $.text([a]) > $.text([b]) ?
+                        inverse ? -1 : 1
+                        : inverse ? 1 : -1;
+            }
+        }, function() {
+            return this.parentNode;
+        });
+
+        $this.data('inverse', !inverse);
+
+        $('#report_order_by').val( $this.attr('abbr') );
+        $('#report_order_type').val( inverse? 'desc' : 'asc' );
+    });
+
     // Collect report fields
     $.each( selectors.reportFields, function() {
         api.reportFields.push( $(this).attr('data-field-name') );
@@ -117,14 +205,15 @@ $(document).ready(function() {
 
     api.reportFieldsAmount = api.reportFields.length;
 
-    $('table').dragtable();
+
 
     $('form#new_report').bind('ajax:complete', function(event, xhr, status) {
         $(this).next().remove();
 
         if ( status = 'success' ) {
             $('#report-placeholder').html($.parseJSON(xhr.responseText).table);
-            $('#report').removeClass('report-preview');
+            $('#report').removeClass('report-preview').
+                    dragtable(utils.dragtableHandler);
             $('input[name="report[page]"]').val("1");
             addPagination();
             $("tr:nth-child(odd)").addClass("alt");
@@ -134,7 +223,6 @@ $(document).ready(function() {
         $('#ajax-load-background').hide();
     }).bind('submit', function() {
         $.reporting.utils.serializeFilters();
-        serializeFields();
     }).bind('ajax:beforeSend', function() {
         $(this).after( $.reporting.loader );
         $('#ajax-load-background').show();
@@ -205,7 +293,8 @@ $(document).ready(function() {
             }
         });
 
-        form.submit();
+        serializeAndSubmit();
+
         form.attr('data-remote', true);  // Man said - man did
         form.data( jqExpando[0], jqExpando[1] );
         return false;
@@ -337,8 +426,7 @@ function toggleColumn(col) {
             }
         }
     } else {
-        serializeFields();
-        $('form#new_report').submit();
+        serializeAndSubmit();
     }
 
 }
@@ -396,6 +484,11 @@ function selectedReportColumns() {
 
 function serializeFields() {
     $('input#report_fields').val( selectedReportColumns().join(',') );
+}
+
+function serializeAndSubmit() {
+    serializeFields();
+    $('form#new_report').submit();
 }
 
 function orderChanged() {

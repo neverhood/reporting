@@ -104,6 +104,12 @@ float:none;
 	margin: 0;
 }
 
+.dragtable-drag-handle {
+    background: #4F6B72;
+    height:15px;
+    margin-bottom: 5px;
+}
+
 caption {
 	padding: 0 0 5px 0;
 	width: 900px;
