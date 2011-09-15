@@ -103,6 +103,13 @@ float:none;
 	padding: 0;
 	margin: 0;
 }
+#report th.desc {
+    background: url(../images/arrow-down.png) no-repeat right bottom;
+}
+
+#report th.asc {
+    background: url(../images/arrow-up.png) no-repeat right bottom;
+}
 
 .dragtable-drag-handle {
     background: #4F6B72;

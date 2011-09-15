@@ -86,7 +86,8 @@ $(document).ready(function() {
             contains: ['is_null', 'is_not_null', 'equals'],
             less_than: ['is_null', 'is_not_null', 'equals'],
             more_than: ['is_null', 'is_not_null', 'equals']
-        }
+        },
+        latestSort: ''
     };
 
     var selectors = api.selectors,
@@ -173,8 +174,13 @@ $(document).ready(function() {
         var table = $('#report'),
                 $this = $(this),
                 thIndex = $this.index(),
-                inverse = $(this).data('inverse');
+                inverse;
 
+        if ( api.latestSort == $this.attr('abbr') ) {
+            inverse = !$this.data('inverse');
+        } else {
+            inverse = false;
+        }
 
         table.find('td').filter(function() {
             return $(this).index() === thIndex;
@@ -192,10 +198,15 @@ $(document).ready(function() {
             return this.parentNode;
         });
 
-        $this.data('inverse', !inverse);
+        $this.data('inverse', inverse);
 
         $('#report_order_by').val( $this.attr('abbr') );
         $('#report_order_type').val( inverse? 'desc' : 'asc' );
+
+        $('#report th').removeClass('desc asc');
+        $this.addClass( inverse? 'desc' : 'asc' );
+
+        api.latestSort = $this.attr('abbr');
     });
 
     // Collect report fields
@@ -314,7 +325,6 @@ $(document).ready(function() {
     $('div#selected-columns').bind('sortupdate', function(event, ui) {
         var $this = $(this),
                 column = ui.item.text().trim(),
-            // selectedColumnsAmount = $('div#selected-columns').children('div.column-header').length,
                 sender = $('#' + ui.item.data('dragged-from'));
 
         if ( sender.attr('id') == 'selected-columns' && ui.item.parent().attr('id') == 'available-columns' ) {
