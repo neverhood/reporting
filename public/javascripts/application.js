@@ -204,62 +204,12 @@ $(document).ready(function() {
     selectors.selectedColumns = 'div#selected-columns';
     selectors.availableColumns = 'div#available-columns';
 
-//    $('div.draggable').draggable({
-//        revert:'invalid',
-//        start: function() {   // We need to track where column has been dragged from initially
-//            var $this = $(this);
-//            $this.data('dragged-from', $this.parent().attr('id') );
-//        }
-//    });
-//
-//    $('div#available-columns').dropable({
-//        accept: '.draggable'
-//    })
-
-//    $('div.droppable').droppable({
-//        accept: '.draggable',
-//        drop: function(event, ui) {
-//
-//            var $this = $(this),
-//                    id = $this.attr('id'),
-//                    column = ui.draggable.text().trim(),
-//                    selectedColumnsAmount = $('div#selected-columns').children('div.draggable').length;
-//
-//            appendDraggable( $this, ui.draggable );
-//
-//            if ( id != ui.draggable.data('dragged-from') ) { // Thanks for a valid drop
-//
-//                if ( id == 'available-columns' ) { // Exclude column
-//                    if ( selectedColumnsAmount > 1 ) {
-//                        toggleColumn(ui.draggable);
-//                    }
-//                    else {
-//                        appendDraggable( $(selectors.selectedColumns), ui.draggable ); // Revert back
-//                    }
-//                } else { // Include column
-//                    toggleColumn(ui.draggable);
-//                }
-//
-//            } else if ( ui.draggable.data('dragged-from') == 'selected-columns' ) {
-//                appendColumn( reportColumn(ui.draggable) );
-//            }
-//        }
-//    });
 
     $('div#selected-columns, div#available-columns').sortable({
         connectWith: '.connectedSortable',
         start: function(event, ui) {
             ui.item.data('dragged-from', ui.item.parent().attr('id') );
         }
-//        },
-//        update: function(event, ui) {
-//            var $this = $(this),
-//                id = $this.attr('id'),
-//                column = ui.item.text().trim(),
-//                sender = $('#' + ui.item.data('dragged-from'));
-//
-//            alert('yep');
-//        }
     }).disableSelection();
 
     $('div#selected-columns').bind('sortupdate', function(event, ui) {
@@ -278,66 +228,9 @@ $(document).ready(function() {
                 serializeFields();
                 $('form#new_report').submit();
             }
-//            var reportRows = $('#report tr').toArray(),
-//                    columns = allIncludedReportColumns();
-//
-//            reportRows.shift(); reportRows.pop();
-//
-//            $.each( columns, function() {
-//
-//                if ( !this.header.is(':visible') ) {
-//                    showColumn(this);
-//                }
-//
-//                $('#report-header').append( this.header );
-//                // alert( $(this.header).attr('abbr') );
-//                var elements = this.elements.toArray();
-//
-//                $.each( reportRows, function() {
-//                    $(this).append( elements.shift() );
-//                });
-//            });
 
         }
-//        $('#report tr').html('');
-//
-//
-//
-//        var reportRows = $('#report tr').toArray();
-//        reportRows.shift(); reportRows.pop();
-//
-//        $.each( columns, function() {
-//
-//            $('#report-header').append( $(this.header) );
-//             // alert( $(this.header).attr('abbr') );
-//            var elements = this.elements.toArray();
-//
-//            $.each( reportRows, function() {
-//                $(this).append( $( elements.shift() ) );
-//            });
-//        });
 
-//        $.each( columns, function() {
-//
-//            var elements = this.elements.toArray();
-//            this.header.show();
-//
-//            $.each( elements, function(index) {
-//                elements[index].show();
-//            })
-//        });
-
-//        var reportRows = $('#report').find('tr').toArray(),
-//                elements = column.elements.toArray();
-//
-//        reportRows.shift(); reportRows.pop(); // Remove header and footer rows
-//
-//        $('#report-header').append( column.header.show() ); // Append header
-//
-//        $.each(reportRows, function() { // append elements
-//            $(this).
-//                    append( $( elements.shift() ).show() );
-//        });
     });
 
 
@@ -410,21 +303,8 @@ function allIncludedReportColumns() {
     var columns = [],
             table = $('#report');
 
-//    var columnPosition = function(columnName) {
-//        var result = 0;
-//        $.each( table.find('th'), function(index, element) {
-//            if ( $(element).attr('abbr') == columnName )
-//                result = index + 1;
-//        });
-//        return result;
-//    };
 
     $.each( $('#selected-columns div.column-header'), function() {
-//        var $element = $(element),
-//                column = {
-//                    header: $element,
-//                    elements: table.find('td:nth-child(' + columnPosition($element.attr('abbr')) + ')')
-//                };
         columns.push( reportColumn( $(this) ) );
     });
     return columns;
