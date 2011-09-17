@@ -12,6 +12,12 @@ class Aed < ActiveRecord::Base
   set_table_name(:aed_report_view)
   set_primary_key(:aed_serial_number)
   #set_field_types_and_defaults
+
+  def self.default_columns_order
+    [:aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location, :coordinator,
+    :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1, :aed_battery_1]
+  end
+
   def self.set_field_types_and_defaults
     # aka Migration. field => type or field => [type, default_value]
     {

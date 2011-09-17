@@ -3,7 +3,7 @@ module ReportsHelper
   # Filters
 
   def report_fields_for(report)
-    options_for_select(report.fields.map { |field| [field, {:class => report.field_types[field]}] })
+    options_for_select(report.default_columns_order.map { |field| [field, {:class => report.field_types[field]}] })
   end
 
   def filters_for field_type

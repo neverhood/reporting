@@ -11,6 +11,11 @@ class LocationList < ActiveRecord::Base
 
   set_table_name(:location_list_view)
   set_primary_key(:location_name)
+
+  def self.default_columns_order  # There's no easy way to make AR keep an attributes order ( workaround for ruby 1.8)
+    [ :location_id, :location_name, :active, :address, :phone_number, :fax_number,
+            :contact_email, :medical_director_name, :local_ems_name, :local_ems_phone_number ]
+  end
   
   def self.set_field_types_and_defaults
     # aka Migration. field => type or field => [type, default_value]

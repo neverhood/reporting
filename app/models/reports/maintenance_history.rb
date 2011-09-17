@@ -12,6 +12,10 @@ class MaintenanceHistory < ActiveRecord::Base
   set_table_name(:maintenance_history_view)
   set_primary_key(:serial_number)
 
+  def self.default_columns_order
+    [:location, :placement, :serial_number, :inspection_date, :inspector_name, :issues]
+  end
+
   def self.set_field_types_and_defaults
     {
         :location => :string,

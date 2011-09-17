@@ -4,6 +4,8 @@ module ActiveRecord
 
   class Base
 
+
+
     def attribute_names
       # AR sorts attributes alphabetically. We don't need that behivour for our
       # report models

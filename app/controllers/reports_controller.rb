@@ -24,7 +24,7 @@ class ReportsController < ApplicationController
 
   def create
     @objects = @report_engine.
-        select(@fields).
+        select(@fields.join(',')).
         from(@report_engine.view).
         where(@filters).
         order(@order)
@@ -48,7 +48,7 @@ class ReportsController < ApplicationController
   end
 
   def valid_params
-    @fields = params[:report][:fields]
+    @fields = params[:report][:fields].split(',')
     @order = params[:report][:order_by] + ' ' + params[:report][:order_type]
     @report_engine = Report::TYPES[params[:report][:type].to_sym]
     @filters = parse_filters(@report_engine, params[:report][:filters]) if params[:report][:filters]
@@ -67,8 +67,8 @@ class ReportsController < ApplicationController
 
   def to_csv(objects)
     if objects && objects.any?
-      objects.first.attrs.keys.join(',') + "\n" +            # Header
-      objects.map {|object| object.attrs.values.join(',')}.join("\n")
+      @fields.join(',') + "\n" +            # Header
+      objects.map {|object| @fields.map {|attr| object.send(attr.to_sym) }.join(',')}.join("\n")
 
     else
       "No data available"

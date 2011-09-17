@@ -12,6 +12,10 @@ class UserTraining < ActiveRecord::Base
   set_table_name(:user_trainings_view)
   set_primary_key(:name)
 
+  def self.default_columns_order
+    [:name, :location, :training_type, :certification_expiration, :days_until_due]
+  end
+
   def self.set_field_types_and_defaults
     {
         :name => :string,

@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.7'
+gem 'rails', '3.0.9'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -10,23 +10,23 @@ gem 'rails', '3.0.7'
 gem 'mysql2', '< 0.3'
 
 # Authlogic for authentication
-gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git',
-  :branch => 'rails3'
+#gem 'authlogic', :git => 'git://github.com/odorcicd/authlogic.git',
+#  :branch => 'rails3'
 
 # Paperclip (photos handling) && mime-types for validation needs
 # Remotipart is used to send response outside the frame ( ajax uploads )
 
 # For internalization sake
-gem 'unicode'
+#gem 'unicode'
 # rails g jquery:install.
 gem 'jquery-rails'
 
 #gem 'mechanize'
 
-gem "s3"
+#gem "s3"
 
 # Use unicorn as the web server
-gem 'unicorn'
+#gem 'unicorn'
 
 #gem 'fastercsv'
 

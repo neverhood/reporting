@@ -112,9 +112,10 @@ float:none;
 }
 
 .dragtable-drag-handle {
-    background: #4F6B72;
-    height:15px;
-    margin-bottom: 5px;
+display:inline-block;
+ /*background-color:red;
+    height:1.5em;*/
+    margin: 0 20px 0 0;
 }
 
 caption {

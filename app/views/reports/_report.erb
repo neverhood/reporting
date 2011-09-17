@@ -8,10 +8,9 @@
   <% if @objects %>
       <thead>
       <tr id='report-header'>
-        <% @objects.first.attrs.keys.each do |field| %>
-            <th scope="col" data-header="<%= field %>" abbr="<%= field %>">
-              <div class="dragtable-drag-handle"></div>
-              <%= field.to_s.humanize %>
+        <% @fields.each do |field| %>
+            <th scope="col" data-header="<%= field %>" abbr="<%= field %>" title="test">
+              <div class="dragtable-drag-handle"><%= field.to_s.humanize %></div>
             </th>
         <% end %>
       </tr>
@@ -20,8 +19,8 @@
       <tbody>
       <% @objects.each do |object| %>
           <tr>
-            <% object.attrs.values.each do |value| %>
-                <td><%= value %></td>
+            <% @fields.each do |attr| %>
+                <td><%= object.send(attr) %></td>
             <% end %>
           </tr>
       <% end %>

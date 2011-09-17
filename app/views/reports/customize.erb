@@ -12,12 +12,14 @@
         <%= link_to 'Export', nil, :id => 'download-csv', :class=>"button btn_export" %>
       </div>
       <h1>
-        <%= @report.type %> report.
+        <%= @report.type.humanize %> report.
       </h1>
       <%= f.hidden_field :type, :value => @report.type %>
       <%= f.hidden_field :page, :value => "1" %>
 
-      <%= f.hidden_field :fields, :value => @report_engine.fields.join(',') %>
+      <%= f.hidden_field :fields, :value => @report_engine.default_columns_order.join(',') %>
+
+      <% @fields ||= @report_engine.default_columns_order %> <%# if @fields is not set( report preview stage ) use the default order %>
 
 
 
@@ -46,7 +48,7 @@
         </div>
         <div id='report-ordering'>
           <h2>Order</h2>
-          <%= f.select(:order_by, @report_engine.fields.map {|field| [field, field]}) %>
+          <%= f.select(:order_by, @fields.map {|field| [field, field]}) %>
           direction: <%= f.select(:order_type, [:asc, :desc].map {|type| [type, type] }) %>
         </div>
 
@@ -61,7 +63,7 @@
   <div class="wrapper_selected_cols">
       <h3>Selected columns</h3>
       <div id='selected-columns' class='connectedSortable'>
-          <% @report_engine.fields.each do |field| %>
+          <% @fields.each do |field| %>
               <div class='column-header'>
                   <%= field %>
               </div>
