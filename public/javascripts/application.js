@@ -261,6 +261,7 @@ $(document).ready(function() {
         }
 
         serializeFieldsAndFilters();
+
         $(this).after( $.reporting.loader );
         $('#ajax-load-background').show();
 
@@ -525,7 +526,7 @@ function selectedReportColumns() {
 }
 
 function serializeFieldsAndFilters() {
-      $.reporting.utils.serializeFields();
+    $.reporting.utils.serializeFields();
     $.reporting.utils.serializeFilters();
 }
 
