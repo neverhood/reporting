@@ -274,6 +274,9 @@ div.report_ref {
 #error_explanation h1 {
     color: #dc143c;
 }
+.error {
+    border: 1px solid #dc143c;
+}
 
 .toolbar {
     margin: 0;

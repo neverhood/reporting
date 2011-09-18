@@ -21,10 +21,10 @@ class Report < ActiveRecord::Base
         :ends_with => lambda {|type, val| " LIKE '%#{val.downcase}' "},
         :equals => lambda {|type, val| ( type==:integer )? (" = #{val} ") : (" = '#{val.downcase}' ") },
         :contains => lambda { |type, val| " LIKE '%#{val.downcase}%' " },
-        :less_than => lambda { |type, val| ( type == :integer )? " < #{val} " : " < '#{val}' " },
-        :more_than => lambda { |type, val| ( type == :integer )? " > #{val} " : " > '#{val}' " },
-        :less_or_equal => lambda { |type, val| ( type == :integer )? " <= #{val} " : " <= '#{val}' " },
-        :more_or_equal => lambda { |type, val| ( type == :integer )? " >= #{val} " : " >= '#{val}' "}
+        :less_than => lambda { |type, val| ( type == :integer )? " < #{val.to_i} " : " < '#{val}' " },
+        :more_than => lambda { |type, val| ( type == :integer )? " > #{val.to_i} " : " > '#{val}' " },
+        :less_or_equal => lambda { |type, val| ( type == :integer )? " <= #{val.to_i} " : " <= '#{val}' " },
+        :more_or_equal => lambda { |type, val| ( type == :integer )? " >= #{val.to_i} " : " >= '#{val}' "}
     }
 
   def self.columns

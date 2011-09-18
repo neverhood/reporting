@@ -103,6 +103,11 @@ $(document).ready(function() {
         return selectors.reportFields.filter(':checked');
     };
 
+
+    utils.serializeFields = function() {
+        $('input#report_fields').val( selectedReportColumns().join(',') );
+    };
+
     utils.serializeFilters = function() {
         var filters = $('#active-filters div'),
                 fieldFilters = {};
@@ -217,26 +222,48 @@ $(document).ready(function() {
     api.reportFieldsAmount = api.reportFields.length;
 
 
+    $('.filter-value').live({
+        blur: function() {
+            if ( this.value.length < 1 ) {
+                $(this).addClass('error');
+            }
+        },
+        focus: function() {
+            $(this).removeClass('error');
+        }
+    });
 
     $('form#new_report').bind('ajax:complete', function(event, xhr, status) {
         $(this).next().remove();
 
         if ( status = 'success' ) {
-            $('#report-placeholder').html($.parseJSON(xhr.responseText).table);
+            $('#report-placeholder').html( $.parseJSON(xhr.responseText).table );
             $('#report').removeClass('report-preview').
                     dragtable(utils.dragtableHandler);
+
             $('input[name="report[page]"]').val("1");
             addPagination();
+
             $("tr:nth-child(odd)").addClass("alt");
 
         }
 
         $('#ajax-load-background').hide();
-    }).bind('submit', function() {
-        $.reporting.utils.serializeFilters();
     }).bind('ajax:beforeSend', function() {
+
+        var invalidFilters = $(this).find('.filter-value')
+                .filter(function() { return this.value.length < 1 });
+
+        if ( invalidFilters.length ) {
+            invalidFilters.first().focus();
+            alert('Please populate or remove the empty filters');
+            return false;
+        }
+
+        serializeFieldsAndFilters();
         $(this).after( $.reporting.loader );
         $('#ajax-load-background').show();
+
     });
 
     $('#report_submit').click(function( event ) {
@@ -257,7 +284,7 @@ $(document).ready(function() {
     };
 
     var reportFilterTypeOnChange = function() {
-        var reportFilterValue = $('<input type="text" class="filter-value" />');
+        var reportFilterValue = $('<input type="text" required="required" class="filter-value" />');
         var $this = $(this),
                 $filter = $this.parent('.filter');
         $filter.find('.filter-value').remove();
@@ -339,7 +366,7 @@ $(document).ready(function() {
             if ( reportColumn( ui.item ) ) {
                 rebuildTable();
             } else {
-                serializeFields();
+                $.reporting.utils.serializeFields();
                 $('form#new_report').submit();
             }
 
@@ -497,12 +524,14 @@ function selectedReportColumns() {
     return columns;
 }
 
-function serializeFields() {
-    $('input#report_fields').val( selectedReportColumns().join(',') );
+function serializeFieldsAndFilters() {
+      $.reporting.utils.serializeFields();
+    $.reporting.utils.serializeFilters();
 }
 
 function serializeAndSubmit() {
-    serializeFields();
+    $.reporting.utils.serializeFields();
+    $.reporting.utils.serializeFilters();
     $('form#new_report').submit();
 }
 

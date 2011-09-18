@@ -100,7 +100,9 @@ class ReportsController < ApplicationController
       else
         if operators_and_values.first.split(':').length > 1
           op, val = operators_and_values.first.split(':')
-          sql_string << column + " " + Report::DATA_MAPPING[op.to_sym].call(report.field_types[column.to_sym],val)
+          unless val.to_s.gsub(' ', '').empty?
+            sql_string << column + " " + Report::DATA_MAPPING[op.to_sym].call(report.field_types[column.to_sym],val)
+          end
         else
           sql_string << column + " " + Report::DATA_MAPPING[operators_and_values.first.to_sym] # this is 'IS NULL' or 'IS NOT NULL'
         end
