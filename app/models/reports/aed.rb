@@ -1,39 +1,5 @@
 class Aed < ActiveRecord::Base
 
-  # since we didn't want to create views right in the database we had to invent some conventions :)
-  # The idea is to manipulate the self::View query as it was a table( Please check lib/AbstractTable )
-  # The actual conventions are:
-  #  * Aliases for each field ( underscored, to make it look native )
-  #  * Alias for the entire query and set_table_name ( should be the same as set_table_name value )
-  #  * SQL string must be assigned to VIEW constant
-  #  * Please include AbstractTable in the end
-  #  * set_primary_key is needed for the ORDER BY purposes
-
-  set_table_name(:aed_report_view)
-  set_primary_key(:aed_serial_number)
-  #set_field_types_and_defaults
-
-  def self.default_columns_order
-    [:aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location, :coordinator,
-    :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1, :aed_battery_1]
-  end
-
-  def self.set_field_types_and_defaults
-    # aka Migration. field => type or field => [type, default_value]
-    {
-        :aed_model => [:string, 'Chinese Tentacle Reanimator'],
-        :aed_serial_number => :string,
-        :location_of_equipment => :string,
-        :placement_in_or_around_location => :string,
-        :coordinator => [:string, 'God'],
-        :adult_electrode_pads => :date,
-        :pediatric_electrode_pads => :date,
-        :aed_battery => :date,
-        :adult_electrode_pads_1 => :date,
-        :aed_battery_1 => :date
-    }
-  end
-
   VIEW =
       <<EOF
 -- AED
@@ -61,5 +27,42 @@ left outer join users on locations.user_id = users.id -- AED Coordinator, no con
 EOF
 
   include AbstractTable
+
+  # since we didn't want to create views right in the database we had to invent some conventions :)
+  # The idea is to manipulate the self::View query as it was a table( Please check lib/AbstractTable )
+  # The actual conventions are:
+  #  * Aliases for each field ( underscored, to make it look native )
+  #  * Alias for the entire query and set_table_name ( should be the same as set_table_name value )
+  #  * SQL string must be assigned to VIEW constant
+  #  * Please include AbstractTable in the end
+  #  * set_primary_key is needed for the ORDER BY purposes
+
+  set_table_name(:aed_report_view)
+  set_primary_key(:aed_serial_number)
+  #set_field_types_and_defaults
+
+  def self.default_columns_order
+    [:aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location, :coordinator,
+     :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1, :aed_battery_1]
+  end
+
+  populate_object_with_default_values :true # true is default
+
+  def self.set_field_types_and_defaults
+    # aka Migration. field => type or field => [type, default_value]
+    {
+        :aed_model => [:string, 'Chinese Tentacle Reanimator'],
+        :aed_serial_number => :string,
+        :location_of_equipment => :string,
+        :placement_in_or_around_location => :string,
+        :coordinator => [:string, 'God'],
+        :adult_electrode_pads => :date,
+        :pediatric_electrode_pads => :date,
+        :aed_battery => :date,
+        :adult_electrode_pads_1 => :date,
+        :aed_battery_1 => :date
+    }
+  end
+
 
 end

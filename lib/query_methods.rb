@@ -4,8 +4,6 @@ module ActiveRecord
 
   class Base
 
-
-
     def attribute_names
       # AR sorts attributes alphabetically. We don't need that behivour for our
       # report models
@@ -20,25 +18,43 @@ module ActiveRecord
 
   class Relation
 
+    # This was made to set the default values for report fields ( in case field is NULL )
+    # But this may be somewhat confusing, since if user will try to filter results by default value - he won't get what he wants
+    # ( because NULL's are still NULLS in the database )
+
     def first
       object = super
-      set_default_values(object) if object.class.respond_to?(:abstract_table?)
+      klass = object.class
+
+      if klass.respond_to?(:abstract_table?) && klass.populates_defaults
+        set_default_values(object)
+      else
+        object
+      end
     end
 
     def last
       object = super
-      set_default_values(object) if object.class.respond_to?(:abstract_table?)
+      klass = object.class
+
+      if klass.respond_to?(:abstract_table?) && klass.populates_defaults
+        set_default_values(object)
+      else
+        object
+      end
     end
 
 
     def all
       objects = super
+      klass = objects.first.class
 
-      if objects.any? && objects.first.class.respond_to?(:abstract_table?)
+      if objects.any? && klass.respond_to?(:abstract_table?) && klass.populates_defaults
         objects.each_with_index do |obj, index|
-          objects[index] = set_default_values(obj) # Some redundancy here, please refactor
-          # ( no need to check field_types for all objects of the same class )
+          objects[index] = set_default_values(obj)
         end
+      else
+        objects
       end
     end
 

@@ -18,9 +18,9 @@ module AbstractTable
     def field_types
       opts = self.set_field_types_and_defaults
       @field_types ||= Hash[
-        opts.map {|array| [array.first,
-                           (array.last.is_a?(Array))? array.last.first : array.last ]
-        }
+          opts.map {|array| [array.first,
+                             (array.last.is_a?(Array))? array.last.first : array.last ]
+          }
       ]
     end
 
@@ -31,9 +31,9 @@ module AbstractTable
     def defaults
       opts = self.set_field_types_and_defaults
       @defaults ||= Hash[
-        opts.map {|array| [array.first,
-                  (array.last.is_a?(Array))? array.last.last : nil ]
-        }
+          opts.map {|array| [array.first,
+                             (array.last.is_a?(Array))? array.last.last : nil ]
+          }
       ]
     end
 
@@ -41,19 +41,26 @@ module AbstractTable
       true
     end
 
+    def populate_object_with_default_values( populate_defaults = :true )
+      self.populates_defaults = populate_defaults == :true
+    end
+
+
   end
 
   def method_missing(name, *args, &blk)  # instance's one
-    if attrs.keys.include?(name.to_sym)
+    if attrs && attrs.keys.include?(name.to_sym)
       attrs[name.to_sym]
+    elsif attributes.to_options.keys.include?(name.to_sym)
+      attributes.to_options[name.to_sym]
     else
-      super(name, args, blk)
+      raise NoMethodError, "undefined method #{name} for #{self.to_s}:#{self.class.to_s}"
     end
   end
 
   def to_csv(fields_order)
     fields_order.map { |attr|
-       "\"#{self.send(attr.to_sym).to_s.gsub(/"/, '\"').gsub(/'/, '\'')}\""
+      "\"#{self.send(attr.to_sym).to_s.gsub(/"/, '\"').gsub(/'/, '\'')}\""
     }.join(',')
   end
 
@@ -63,14 +70,15 @@ module AbstractTable
     base.class_eval do
       attr_accessor :attrs  # The same as attributes but is populated with default values instead nils if any
       # set in `set_field_types_and_defaults` class method
-      scope :report, from(view)
+
+      scope :report, from( view )
 
       # A little bit dirty ( delegating instance methods of class Class ) but useful as hell
       class << self
 
-        attr_accessor :fields_order
-
+        attr_accessor :populates_defaults
         delegate :first, :last, :where, :all, :limit, :to => :report # essential ones, want to name more? :) Feel free to populate
+
       end
 
     end
