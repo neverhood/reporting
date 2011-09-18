@@ -8,11 +8,14 @@
   <% if @objects %>
       <thead>
       <tr id='report-header'>
+
         <% @fields.each do |field| %>
-            <th scope="col" data-header="<%= field %>" abbr="<%= field %>" title="test">
+            <th scope="col" data-header="<%= field %>" abbr="<%= field %>"
+                title="Drag column title to change column position. Click aside column title to change row order.">
               <div class="dragtable-drag-handle"><%= field.to_s.humanize %></div>
             </th>
         <% end %>
+
       </tr>
       </thead>
 

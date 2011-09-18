@@ -51,6 +51,12 @@ module AbstractTable
     end
   end
 
+  def to_csv(fields_order)
+    fields_order.map { |attr|
+       "\"#{self.send(attr.to_sym).to_s.gsub(/"/, '\"').gsub(/'/, '\'')}\""
+    }.join(',')
+  end
+
   def self.included(base)
     base.extend(ClassMethods)
 
@@ -61,6 +67,9 @@ module AbstractTable
 
       # A little bit dirty ( delegating instance methods of class Class ) but useful as hell
       class << self
+
+        attr_accessor :fields_order
+
         delegate :first, :last, :where, :all, :limit, :to => :report # essential ones, want to name more? :) Feel free to populate
       end
 

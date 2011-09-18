@@ -1,5 +1,3 @@
-require "csv"
-
 class ReportsController < ApplicationController
 
   before_filter :valid_report_type, :only => :customize
@@ -67,9 +65,8 @@ class ReportsController < ApplicationController
 
   def to_csv(objects)
     if objects && objects.any?
-      @fields.join(',') + "\n" +            # Header
-      objects.map {|object| @fields.map {|attr| object.send(attr.to_sym) }.join(',')}.join("\n")
-
+      @fields.map { |field| "\"#{field}\"" }.join(',') + "\n" +            # Header
+      objects.map { |object| object.to_csv(@fields) }.join("\n")   # Body
     else
       "No data available"
     end
