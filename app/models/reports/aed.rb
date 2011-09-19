@@ -39,14 +39,13 @@ EOF
 
   set_table_name(:aed_report_view)
   set_primary_key(:aed_serial_number)
-  #set_field_types_and_defaults
 
   def self.default_columns_order
     [:aed_model, :aed_serial_number, :location_of_equipment, :placement_in_or_around_location, :coordinator,
      :adult_electrode_pads, :pediatric_electrode_pads, :aed_battery, :adult_electrode_pads_1, :aed_battery_1]
   end
 
-  populate_object_with_default_values :true # true is default
+  populate_object_with_default_values :false # true is default
 
   def self.set_field_types_and_defaults
     # aka Migration. field => type or field => [type, default_value]

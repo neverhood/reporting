@@ -34,7 +34,7 @@ EOF
     [:name, :location, :training_type, :certification_expiration, :days_until_due]
   end
 
-  populate_object_with_default_values :true # true is default
+  populate_object_with_default_values :false # true is default
 
   def self.set_field_types_and_defaults
     {
